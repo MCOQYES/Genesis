@@ -1,24 +1,435 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>GENESIS 0.1 — GENESIS</title><style>
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000;color:#eee;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}svg{width:100vw;height:100vh;display:block}
-#panel{position:fixed;top:18px;left:18px;width:min(360px,calc(100vw - 36px));max-height:calc(100vh - 36px);overflow-y:auto;padding:14px;background:rgba(8,8,8,.90);border:1px solid #333;border-radius:12px;z-index:10;backdrop-filter:blur(10px)}#panel.hidden{display:none}.brand{display:flex;gap:10px;align-items:center;margin-bottom:12px}.mark{width:44px;height:44px;border:1px solid #444;border-radius:9px;display:grid;place-items:center;font-size:22px}h1{margin:0;font-size:21px;letter-spacing:.12em}.sub{font-size:11px;opacity:.58;letter-spacing:.12em}.row{margin:11px 0}label{display:block;margin-bottom:5px;opacity:.74}.value{float:right;opacity:.72}input[type=range],select{width:100%}input[type=color]{width:72px;height:38px;padding:4px;border:0;background:#ddd}select{height:30px;font-size:16px}button{width:100%;margin-top:9px;padding:10px;background:#111;color:#eee;border:1px solid #333;border-radius:7px;font-size:16px}button:disabled{opacity:.35}.hint{margin-top:11px;font-size:10px;line-height:1.45;opacity:.45}#toggle{position:fixed;top:18px;right:18px;width:46px;height:46px;margin:0;padding:0;border-radius:10px;background:rgba(8,8,8,.78);z-index:20;font-size:20px}
-@media(max-width:700px){#panel{top:10px;left:10px;width:calc(100vw - 20px);max-height:calc(100vh - 20px);padding:12px}h1{font-size:18px}.row{margin:9px 0}#toggle{top:10px;right:10px;width:42px;height:42px}}
-</style></head><body><svg id="canvas" viewBox="-500 -500 1000 1000"></svg><button id="toggle">G</button><div id="panel"><div class="brand"><div class="mark">G</div><div><h1>GENESIS 0.1</h1><div class="sub">FIRST STABLE RELEASE</div></div></div>
-<div class="row"><label>Shape</label><select id="shape"><option>Triangle</option><option>Square</option><option selected>Pentagon</option><option>Hexagon</option><option>Octagon</option><option>Circle</option><option>Line</option></select></div>
-<div class="row"><label>Start <span id="sv" class="value"></span></label><input id="start" type="color" value="#ffffff"></div><div class="row"><label>End <span id="ev" class="value"></span></label><input id="end" type="color" value="#00ffff"></div><div class="row"><label>Palette Center <span id="cv" class="value"></span></label><input id="center" type="range" min=".05" max=".95" step=".01" value=".50"></div><div class="row"><label>Initial Scale <span id="iv" class="value"></span></label><input id="initial" type="range" min=".1" max="100" step=".1" value="50"></div><div class="row"><label>Scale Factor <span id="fv" class="value"></span></label><input id="factor" type="range" min="1.001" max="1.15" step=".001" value="1.075"></div><div class="row"><label>Rotation <span id="av" class="value"></span></label><input id="angle" type="range" min="0" max="180" step=".5" value="0"></div><div class="row"><label>Line Width <span id="lv" class="value"></span></label><input id="line" type="range" min=".1" max="5" step=".05" value="2.50"></div>
-<div class="row"><label>Mode</label><select id="mode"><option value="Static">Static</option><option value="Forward" selected>Forward</option><option value="Repeat">Repeat</option><option value="Breath">Breath</option></select></div><div class="row"><label>Delay <span id="dv" class="value"></span></label><select id="delay"><option value="0">0</option><option value="5">5</option><option value="10">10</option><option value="25" selected>25</option><option value="50">50</option><option value="75">75</option><option value="100">100</option><option value="200">200</option><option value="300">300</option></select></div>
-<button id="generate">GENERATE</button><button id="stop" disabled>STOP</button><button id="reset">RESET</button><div class="hint">GENESIS 0.1 — first stable release. Universe limit: escape scale × 2. Static draws once. Forward draws once over time. Repeat redraws from empty. Breath draws forward, then removes the same shapes in reverse order, and repeats. Line is GENESIS's first open geometry. Desktop: press G. Touch: use the floating G button.</div></div>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GENESIS 0.1.2 — TRAVEL</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000;color:#eee;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+svg{width:100vw;height:100vh;display:block}
+#panel{position:fixed;top:18px;left:18px;width:min(360px,calc(100vw - 36px));max-height:calc(100vh - 36px);overflow-y:auto;padding:14px;background:rgba(8,8,8,.90);border:1px solid #333;border-radius:12px;z-index:10;backdrop-filter:blur(10px)}
+#panel.hidden{display:none}
+.brand{display:flex;gap:10px;align-items:center;margin-bottom:12px}
+.mark{width:44px;height:44px;border:1px solid #444;border-radius:9px;display:grid;place-items:center;font-size:22px}
+h1{margin:0;font-size:21px;letter-spacing:.12em}
+.sub{font-size:11px;opacity:.58;letter-spacing:.12em}
+.row{margin:11px 0}
+label{display:block;margin-bottom:5px;opacity:.74}
+.value{float:right;opacity:.72}
+input[type=range],select{width:100%}
+input[type=color]{width:72px;height:38px;padding:4px;border:0;background:#ddd}
+select{height:30px;font-size:16px}
+button{width:100%;margin-top:9px;padding:10px;background:#111;color:#eee;border:1px solid #333;border-radius:7px;font-size:16px;letter-spacing:.03em}
+button:disabled,input:disabled,select:disabled{opacity:.35}
+#engage{border-color:#465b78;background:#0d1118}
+#engage.running{border-color:#9a5a5a;background:#1a0c0c}
+.hint{margin-top:11px;font-size:10px;line-height:1.45;opacity:.45}
+#toggle{position:fixed;top:18px;right:18px;width:46px;height:46px;margin:0;padding:0;border-radius:10px;background:rgba(8,8,8,.78);z-index:20;font-size:20px}
+.ends{display:flex;justify-content:space-between;margin-top:3px;font-size:9px;letter-spacing:.12em;opacity:.48}
+@media(max-width:700px){
+  #panel{top:10px;left:10px;width:calc(100vw - 20px);max-height:calc(100vh - 20px);padding:12px}
+  h1{font-size:18px}.row{margin:9px 0}
+  #toggle{top:10px;right:10px;width:42px;height:42px}
+}
+</style>
+</head>
+<body>
+<svg id="canvas" viewBox="-500 -500 1000 1000"><g id="universe"></g></svg>
+
+<button id="toggle">G</button>
+
+<div id="panel">
+  <div class="brand">
+    <div class="mark">G</div>
+    <div><h1>GENESIS 0.1.2</h1><div class="sub">TRAVEL</div></div>
+  </div>
+
+  <div class="row"><label>Shape</label>
+    <select id="shape">
+      <option>Triangle</option><option>Square</option><option selected>Pentagon</option>
+      <option>Hexagon</option><option>Octagon</option><option>Circle</option><option>Line</option>
+    </select>
+  </div>
+
+  <div class="row"><label>Start <span id="sv" class="value"></span></label><input id="start" type="color" value="#ffffff"></div>
+  <div class="row"><label>End <span id="ev" class="value"></span></label><input id="end" type="color" value="#00ffff"></div>
+  <div class="row"><label>Palette Center <span id="cv" class="value"></span></label><input id="center" type="range" min=".05" max=".95" step=".01" value=".50"></div>
+  <div class="row"><label>Initial Scale <span id="iv" class="value"></span></label><input id="initial" type="range" min=".1" max="100" step=".1" value="50"></div>
+  <div class="row"><label>Scale Factor <span id="fv" class="value"></span></label><input id="factor" type="range" min="1.001" max="1.15" step=".001" value="1.075"></div>
+  <div class="row"><label>Rotation <span id="av" class="value"></span></label><input id="angle" type="range" min="0" max="180" step=".5" value="0"></div>
+  <div class="row"><label>Line Width <span id="lv" class="value"></span></label><input id="line" type="range" min=".1" max="5" step=".05" value="2.50"></div>
+
+  <div class="row"><label>Mode</label>
+    <select id="mode"><option value="Static">Static</option><option value="Forward" selected>Forward</option><option value="Repeat">Repeat</option><option value="Breath">Breath</option></select>
+  </div>
+
+  <div class="row"><label>Delay <span id="dv" class="value"></span></label>
+    <select id="delay"><option value="0">0</option><option value="5">5</option><option value="10">10</option><option value="25" selected>25</option><option value="50">50</option><option value="75">75</option><option value="100">100</option><option value="200">200</option><option value="300">300</option></select>
+  </div>
+
+  <div class="row"><label>Observer <span id="ov" class="value"></span></label>
+    <input id="observer" type="range" min="-3" max="1" step=".01" value="0">
+    <div class="ends"><span>NEAR</span><span>FAR</span></div>
+  </div>
+
+  <button id="generate">GENERATE</button>
+  <button id="engage" disabled>ENGAGE</button>
+  <button id="stop" disabled>STOP</button>
+  <button id="reset">RESET</button>
+
+  <div class="hint">
+    GENESIS 0.1.2 — Travel moves the Observer through the completed universe without regenerating geometry.
+    ENGAGE travels from the current viewpoint toward the primordial shape. The arrival point is calculated from the first generated structure.
+  </div>
+</div>
+
 <script>
-const q=id=>document.getElementById(id),S=q('canvas'),C={shape:q('shape'),start:q('start'),end:q('end'),center:q('center'),initial:q('initial'),factor:q('factor'),angle:q('angle'),line:q('line'),mode:q('mode'),delay:q('delay')};let RUN=0,ACTIVE=false;
-function poly(n){return{g(s){let p=[];for(let i=0;i<n;i++){let a=-Math.PI/2+i*2*Math.PI/n;p.push([s*Math.cos(a),s*Math.sin(a)])}return{t:'p',p}},e(b){let x=0,y=0;for(let i=0;i<n;i++){let a=-Math.PI/2+i*2*Math.PI/n;x=Math.max(x,Math.abs(Math.cos(a)));y=Math.max(y,Math.abs(Math.sin(a)))}return Math.min(b.x/x,b.y/y)}}}
-const SH={Triangle:poly(3),Square:poly(4),Pentagon:poly(5),Hexagon:poly(6),Octagon:poly(8),Circle:{g:s=>({t:'c',r:s}),e:b=>Math.min(b.x,b.y)},Line:{g:s=>({t:'l',p:[[-s,0],[s,0]]}),e:b=>Math.min(b.x,b.y)}};
-function rot(g,i,a){if(g.t==='c')return g;let r=i*a*Math.PI/180,c=Math.cos(r),s=Math.sin(r);return{t:g.t,p:g.p.map(([x,y])=>[x*c-y*s,x*s+y*c])}}
-function rgb(a,b,t){let h=x=>{x=x.replace('#','');return[parseInt(x.slice(0,2),16),parseInt(x.slice(2,4),16),parseInt(x.slice(4,6),16)]},A=h(a),B=h(b);let c=Math.max(.000001,Math.min(.999999,+C.center.value));if(t>0&&t<1){let o=t/(1-t),co=c/(1-c);t=1/(1+co/o)}return`rgb(${A.map((v,i)=>Math.round(v+(B[i]-v)*t)).join(',')})`}
-function clear(){S.replaceChildren()}function draw(g,col,w){let n=document.createElementNS('http://www.w3.org/2000/svg',g.t==='p'?'polygon':g.t==='l'?'polyline':'circle');if(g.t==='p'||g.t==='l')n.setAttribute('points',g.p.map(v=>v.join(',')).join(' '));else{n.setAttribute('cx',0);n.setAttribute('cy',0);n.setAttribute('r',g.r)}n.setAttribute('fill','none');n.setAttribute('stroke',col);n.setAttribute('stroke-width',w);S.appendChild(n);return n}
+const q=id=>document.getElementById(id),
+      S=q('canvas'),
+      U=q('universe'),
+      C={
+        shape:q('shape'),start:q('start'),end:q('end'),center:q('center'),
+        initial:q('initial'),factor:q('factor'),angle:q('angle'),line:q('line'),
+        mode:q('mode'),delay:q('delay'),observer:q('observer')
+      };
+
+let RUN=0, ACTIVE=false, COMPLETE=false, TRAVELLING=false, TRAVEL_TOKEN=0;
+let LAST_FRAMES=[];
+
+/*
+ * TRAVEL is deliberately logarithmic in observer space.
+ * That keeps visual magnification feeling continuous: 1× -> 10× -> 100×
+ * uses equal travel distance in the control domain.
+ */
+const TRAVEL_SPEED = 0.34;   // observer units / second
+const MAX_NEAR_SCALE = 1000; // protects the renderer from absurd transforms
+
+function poly(n){
+  return{
+    g(s){
+      let p=[];
+      for(let i=0;i<n;i++){
+        let a=-Math.PI/2+i*2*Math.PI/n;
+        p.push([s*Math.cos(a),s*Math.sin(a)]);
+      }
+      return{t:'p',p};
+    },
+    e(b){
+      let x=0,y=0;
+      for(let i=0;i<n;i++){
+        let a=-Math.PI/2+i*2*Math.PI/n;
+        x=Math.max(x,Math.abs(Math.cos(a)));
+        y=Math.max(y,Math.abs(Math.sin(a)));
+      }
+      return Math.min(b.x/x,b.y/y);
+    }
+  };
+}
+
+const SH={
+  Triangle:poly(3),
+  Square:poly(4),
+  Pentagon:poly(5),
+  Hexagon:poly(6),
+  Octagon:poly(8),
+  Circle:{g:s=>({t:'c',r:s}),e:b=>Math.min(b.x,b.y)},
+  Line:{g:s=>({t:'l',p:[[-s,0],[s,0]]}),e:b=>Math.min(b.x,b.y)}
+};
+
+function rot(g,i,a){
+  if(g.t==='c')return g;
+  let r=i*a*Math.PI/180,c=Math.cos(r),s=Math.sin(r);
+  return{t:g.t,p:g.p.map(([x,y])=>[x*c-y*s,x*s+y*c])};
+}
+
+function rgb(a,b,t){
+  let h=x=>{
+    x=x.replace('#','');
+    return[parseInt(x.slice(0,2),16),parseInt(x.slice(2,4),16),parseInt(x.slice(4,6),16)];
+  };
+  let A=h(a),B=h(b);
+  let c=Math.max(.000001,Math.min(.999999,+C.center.value));
+  if(t>0&&t<1){
+    let o=t/(1-t),co=c/(1-c);
+    t=1/(1+co/o);
+  }
+  return`rgb(${A.map((v,i)=>Math.round(v+(B[i]-v)*t)).join(',')})`;
+}
+
+function clear(){U.replaceChildren()}
+
+function draw(g,col,w){
+  let n=document.createElementNS('http://www.w3.org/2000/svg',g.t==='p'?'polygon':g.t==='l'?'polyline':'circle');
+  if(g.t==='p'||g.t==='l')n.setAttribute('points',g.p.map(v=>v.join(',')).join(' '));
+  else{
+    n.setAttribute('cx',0);n.setAttribute('cy',0);n.setAttribute('r',g.r);
+  }
+  n.setAttribute('fill','none');
+  n.setAttribute('stroke',col);
+  n.setAttribute('stroke-width',w);
+  U.appendChild(n);
+  return n;
+}
+
 const nap=ms=>ms?new Promise(r=>setTimeout(r,ms)):new Promise(requestAnimationFrame);
-function frames(){let vb=S.viewBox.baseVal,b={x:vb.width/2,y:vb.height/2},sh=SH[C.shape.value],lim=sh.e(b)*2.5,sc=+C.initial.value,f=+C.factor.value,a=+C.angle.value,L=[];while(sc<lim&&L.length<20000){L.push(rot(sh.g(sc),L.length,a));sc*=f}return L}
-function setActive(v){ACTIVE=v;q('generate').disabled=v;q('stop').disabled=!v}
-async function build(id,temporal){clear();let F=frames(),nodes=[];for(let i=0;i<F.length;i++){if(id!==RUN)return null;nodes.push(draw(F[i],rgb(C.start.value,C.end.value,F.length<=1?0:i/(F.length-1)),+C.line.value));if(temporal)await nap(+C.delay.value)}return nodes}
-async function go(){RUN++;let id=RUN,mode=C.mode.value,temporal=mode!=='Static';setActive(true);try{if(mode==='Static'||mode==='Forward')await build(id,temporal);else if(mode==='Repeat'){while(id===RUN){let n=await build(id,true);if(!n)break;await nap(0)}}else{while(id===RUN){let n=await build(id,true);if(!n)break;for(let i=n.length-1;i>=0;i--){if(id!==RUN)break;n[i].remove();await nap(+C.delay.value)}}}}finally{if(id===RUN)setActive(false)}}
-function labels(){q('sv').textContent=C.start.value.toUpperCase();q('ev').textContent=C.end.value.toUpperCase();q('cv').textContent=(+C.center.value).toFixed(2);q('iv').textContent=(+C.initial.value).toFixed(1);q('fv').textContent=(+C.factor.value).toFixed(3);q('av').textContent=(+C.angle.value).toFixed(1)+'°';q('lv').textContent=(+C.line.value).toFixed(2);q('dv').textContent=C.delay.value+' ms'}
-q('generate').onclick=go;q('stop').onclick=()=>{RUN++;setActive(false)};q('reset').onclick=()=>{RUN++;C.shape.value='Pentagon';C.start.value='#ffffff';C.end.value='#00ffff';C.center.value='.50';C.initial.value='50';C.factor.value='1.075';C.angle.value='0';C.line.value='2.50';C.mode.value='Forward';C.delay.value='25';labels();setActive(false);go()};q('toggle').onclick=()=>q('panel').classList.toggle('hidden');document.querySelectorAll('input,select').forEach(x=>x.oninput=x.onchange=labels);document.onkeydown=e=>{if(e.key.toLowerCase()==='g'&&!['INPUT','SELECT','TEXTAREA'].includes(document.activeElement.tagName)){q('panel').classList.toggle('hidden');e.preventDefault()}};labels();go();
-</script></body></html>
+
+function frames(){
+  let vb=S.viewBox.baseVal,
+      b={x:vb.width/2,y:vb.height/2},
+      sh=SH[C.shape.value],
+      lim=sh.e(b)*2.5,
+      sc=+C.initial.value,
+      f=+C.factor.value,
+      a=+C.angle.value,
+      L=[];
+
+  while(sc<lim&&L.length<20000){
+    L.push(rot(sh.g(sc),L.length,a));
+    sc*=f;
+  }
+  return L;
+}
+
+function os(){return Math.pow(10,-(+C.observer.value))}
+
+function applyObserver(){
+  let s=os();
+  U.setAttribute('transform',`scale(${s})`);
+  q('ov').textContent=
+    s===1?'ORIGINAL':
+    (s>1?s.toFixed(s>=100?0:s>=10?1:2)+'× NEAR':s.toFixed(2)+'× FAR');
+}
+
+/* Radius of the primordial geometry in universe coordinates. */
+function extent(g){
+  if(g.t==='c')return g.r;
+  return Math.max(...g.p.map(([x,y])=>Math.hypot(x,y)));
+}
+
+/*
+ * ARRIVAL is not a magic observer value.
+ * We compute the magnification that brings the first generated shape
+ * close to the viewport while keeping it visible.
+ */
+function arrivalValue(){
+  if(!LAST_FRAMES.length)return -1;
+  let vb=S.viewBox.baseVal,
+      r=Math.max(.000001,extent(LAST_FRAMES[0])),
+      half=Math.min(vb.width,vb.height)/2,
+      targetScale=Math.min(MAX_NEAR_SCALE,half*.88/r);
+
+  targetScale=Math.max(1,targetScale);
+  return Math.max(+C.observer.min,Math.min(+C.observer.max,-Math.log10(targetScale)));
+}
+
+function allowed(){return !ACTIVE&&!TRAVELLING&&COMPLETE&&(C.mode.value==='Static'||C.mode.value==='Forward')}
+
+function observerState(){
+  C.observer.disabled=!allowed();
+  q('engage').disabled=!allowed();
+}
+
+function setActive(v){
+  ACTIVE=v;
+  q('generate').disabled=v||TRAVELLING;
+  q('stop').disabled=!(v||TRAVELLING);
+  observerState();
+}
+
+function setTravel(v){
+  TRAVELLING=v;
+  q('generate').disabled=v||ACTIVE;
+  q('stop').disabled=!(v||ACTIVE);
+  q('engage').classList.toggle('running',v);
+  q('engage').textContent=v?'ABORT':'ENGAGE';
+  C.observer.disabled=v||!COMPLETE;
+  document.querySelectorAll('input:not(#observer),select').forEach(x=>x.disabled=v||ACTIVE);
+  if(!v){
+    document.querySelectorAll('input:not(#observer),select').forEach(x=>x.disabled=false);
+    observerState();
+  }
+}
+
+async function build(id,temporal){
+  clear();
+  COMPLETE=false;
+  observerState();
+  C.observer.value='0';
+  applyObserver();
+
+  let F=frames(),nodes=[];
+  LAST_FRAMES=F;
+
+  for(let i=0;i<F.length;i++){
+    if(id!==RUN)return null;
+    nodes.push(draw(
+      F[i],
+      rgb(C.start.value,C.end.value,F.length<=1?0:i/(F.length-1)),
+      +C.line.value
+    ));
+    if(temporal)await nap(+C.delay.value);
+  }
+  return nodes;
+}
+
+async function go(){
+  abortTravel();
+  RUN++;
+  let id=RUN,m=C.mode.value,t=m!=='Static';
+  COMPLETE=false;
+  LAST_FRAMES=[];
+  setActive(true);
+
+  try{
+    if(m==='Static'||m==='Forward'){
+      let n=await build(id,t);
+      if(n&&id===RUN)COMPLETE=true;
+    }else if(m==='Repeat'){
+      while(id===RUN){
+        let n=await build(id,true);
+        if(!n)break;
+        await nap(0);
+      }
+    }else{
+      while(id===RUN){
+        let n=await build(id,true);
+        if(!n)break;
+        for(let i=n.length-1;i>=0;i--){
+          if(id!==RUN)break;
+          n[i].remove();
+          await nap(+C.delay.value);
+        }
+      }
+    }
+  }finally{
+    if(id===RUN){
+      setActive(false);
+      observerState();
+    }
+  }
+}
+
+function easeInOut(t){
+  return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+}
+
+function travel(){
+  if(!allowed())return;
+
+  let start=+C.observer.value,
+      target=arrivalValue();
+
+  /* Already at, or closer than, the calculated arrival point. */
+  if(start<=target+.0001){
+    C.observer.value=target;
+    applyObserver();
+    return;
+  }
+
+  let distance=Math.abs(target-start),
+      duration=Math.max(700,distance/TRAVEL_SPEED*1000),
+      token=++TRAVEL_TOKEN,
+      began=null;
+
+  setTravel(true);
+
+  function step(now){
+    if(token!==TRAVEL_TOKEN)return;
+
+    if(began===null)began=now;
+    let t=Math.min(1,(now-began)/duration);
+    let p=easeInOut(t);
+
+    C.observer.value=start+(target-start)*p;
+    applyObserver();
+
+    if(t<1){
+      requestAnimationFrame(step);
+    }else{
+      setTravel(false);
+    }
+  }
+
+  requestAnimationFrame(step);
+}
+
+function abortTravel(){
+  TRAVEL_TOKEN++;
+  if(TRAVELLING)setTravel(false);
+}
+
+function labels(){
+  q('sv').textContent=C.start.value.toUpperCase();
+  q('ev').textContent=C.end.value.toUpperCase();
+  q('cv').textContent=(+C.center.value).toFixed(2);
+  q('iv').textContent=(+C.initial.value).toFixed(1);
+  q('fv').textContent=(+C.factor.value).toFixed(3);
+  q('av').textContent=(+C.angle.value).toFixed(1)+'°';
+  q('lv').textContent=(+C.line.value).toFixed(2);
+  q('dv').textContent=C.delay.value+' ms';
+  applyObserver();
+  observerState();
+}
+
+q('generate').onclick=go;
+q('engage').onclick=()=>TRAVELLING?abortTravel():travel();
+q('stop').onclick=()=>{
+  if(TRAVELLING)abortTravel();
+  RUN++;
+  COMPLETE=false;
+  setActive(false);
+  observerState();
+};
+C.observer.oninput=applyObserver;
+
+C.mode.onchange=()=>{
+  abortTravel();
+  if(C.mode.value==='Repeat'||C.mode.value==='Breath'){
+    C.observer.value='0';
+    applyObserver();
+  }
+  labels();
+};
+
+q('reset').onclick=()=>{
+  abortTravel();
+  RUN++;
+  COMPLETE=false;
+  LAST_FRAMES=[];
+
+  C.shape.value='Pentagon';
+  C.start.value='#ffffff';
+  C.end.value='#00ffff';
+  C.center.value='.50';
+  C.initial.value='50';
+  C.factor.value='1.075';
+  C.angle.value='0';
+  C.line.value='2.50';
+  C.mode.value='Forward';
+  C.delay.value='25';
+  C.observer.value='0';
+
+  labels();
+  setActive(false);
+  go();
+};
+
+q('toggle').onclick=()=>q('panel').classList.toggle('hidden');
+
+document.querySelectorAll('input:not(#observer),select').forEach(x=>{
+  if(x!==C.mode)x.oninput=x.onchange=labels;
+});
+
+document.onkeydown=e=>{
+  if(e.key.toLowerCase()==='g'&&!['INPUT','SELECT','TEXTAREA'].includes(document.activeElement.tagName)){
+    q('panel').classList.toggle('hidden');
+    e.preventDefault();
+  }
+};
+
+labels();
+go();
+</script>
+</body>
+</html>
