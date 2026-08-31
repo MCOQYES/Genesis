@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>GENESIS 0.1.2 — TRAVEL</title>
+<title>GENESIS 0.2 — FULL WARP EXPERIENCE</title>
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000;color:#eee;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
@@ -19,11 +19,20 @@ label{display:block;margin-bottom:5px;opacity:.74}
 .value{float:right;opacity:.72}
 input[type=range],select{width:100%}
 input[type=color]{width:72px;height:38px;padding:4px;border:0;background:#ddd}
-select{height:30px;font-size:16px}
-button{width:100%;margin-top:9px;padding:10px;background:#111;color:#eee;border:1px solid #333;border-radius:7px;font-size:16px;letter-spacing:.03em}
+select{height:28px;font-size:15px}
+button{width:100%;margin-top:7px;padding:8px;background:#111;color:#eee;border:1px solid #333;border-radius:7px;font-size:15px;letter-spacing:.03em}
 button:disabled,input:disabled,select:disabled{opacity:.35}
+.control-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:7px}
+.control-grid button{margin-top:0}
+#go{border-color:#3b4a56;background:#0d1115}
 #engage{border-color:#465b78;background:#0d1118}
-#engage.running{border-color:#9a5a5a;background:#1a0c0c}
+#engage.running,#go.running{border-color:#9a5a5a;background:#1a0c0c}
+#warpToggle{display:flex;align-items:center;gap:8px;margin-top:9px;font-size:13px;opacity:.75}
+#warpToggle input{width:auto}
+#bridgeToggle{position:fixed;right:18px;top:18px;z-index:9999;width:44px;height:44px;margin:0;padding:0;border:1px solid #465b78;border-radius:10px;background:rgba(10,12,16,.82);color:#eee;font-size:20px;font-weight:600;display:none;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,.35)}
+body.warp-mode .panel,
+body.warp-mode #panel{display:none !important}
+body.warp-mode #bridgeToggle{display:block !important}
 .hint{margin-top:11px;font-size:10px;line-height:1.45;opacity:.45}
 #toggle{position:fixed;top:18px;right:18px;width:46px;height:46px;margin:0;padding:0;border-radius:10px;background:rgba(8,8,8,.78);z-index:20;font-size:20px}
 .ends{display:flex;justify-content:space-between;margin-top:3px;font-size:9px;letter-spacing:.12em;opacity:.48}
@@ -35,14 +44,15 @@ button:disabled,input:disabled,select:disabled{opacity:.35}
 </style>
 </head>
 <body>
-<svg id="canvas" viewBox="-500 -500 1000 1000"><g id="universe"></g></svg>
+<svg id="canvas" viewBox="-500 -500 1000 1000"><g id="universe"></g><g id="warpUniverse" opacity="0"></g></svg>
+<button id="bridgeToggle" aria-label="Show bridge controls">G</button>
 
 <button id="toggle">G</button>
 
 <div id="panel">
   <div class="brand">
     <div class="mark">G</div>
-    <div><h1>GENESIS 0.1.2</h1><div class="sub">TRAVEL</div></div>
+    <div><h1>GENESIS 0.2</h1><div class="sub">GO · WARP · INFINITE TRAVEL</div></div>
   </div>
 
   <div class="row"><label>Shape</label>
@@ -58,7 +68,8 @@ button:disabled,input:disabled,select:disabled{opacity:.35}
   <div class="row"><label>Initial Scale <span id="iv" class="value"></span></label><input id="initial" type="range" min=".1" max="100" step=".1" value="50"></div>
   <div class="row"><label>Scale Factor <span id="fv" class="value"></span></label><input id="factor" type="range" min="1.001" max="1.15" step=".001" value="1.075"></div>
   <div class="row"><label>Rotation <span id="av" class="value"></span></label><input id="angle" type="range" min="0" max="180" step=".5" value="0"></div>
-  <div class="row"><label>Line Width <span id="lv" class="value"></span></label><input id="line" type="range" min=".1" max="5" step=".05" value="2.50"></div>
+  <div class="row"><label>Line Width <span id="lv" class="value"></span></label><input id="line" type="range" min=".05" max="5" step=".01" value="2.50"></div>
+  <div class="row"><label>Intensity <span id="tv" class="value"></span></label><input id="intensity" type="range" min="25" max="200" step="1" value="100"></div>
 
   <div class="row"><label>Mode</label>
     <select id="mode"><option value="Static">Static</option><option value="Forward" selected>Forward</option><option value="Repeat">Repeat</option><option value="Breath">Breath</option></select>
@@ -74,13 +85,16 @@ button:disabled,input:disabled,select:disabled{opacity:.35}
   </div>
 
   <button id="generate">GENERATE</button>
+  <div class="control-grid">
+    <button id="go" disabled>GO</button>
+    <button id="stop" disabled>STOP</button>
+  </div>
   <button id="engage" disabled>ENGAGE</button>
-  <button id="stop" disabled>STOP</button>
+  <label id="warpToggle"><input type="checkbox" id="warpColors"> Genesis colors in WARP</label>
   <button id="reset">RESET</button>
 
   <div class="hint">
-    GENESIS 0.1.2 — Travel moves the Observer through the completed universe without regenerating geometry.
-    ENGAGE travels from the current viewpoint toward the primordial shape. The arrival point is calculated from the first generated structure.
+    GENESIS 0.2.1 — GO preserves normal Genesis exploration: travel toward the generated depth, STOP anywhere, inspect the geometry. ENGAGE reserves the infinite mathematical sequence for WARP. The hand-off is phase-aligned and crossfaded so the voyage changes engines without a hard visual cut.
   </div>
 </div>
 
@@ -88,14 +102,17 @@ button:disabled,input:disabled,select:disabled{opacity:.35}
 const q=id=>document.getElementById(id),
       S=q('canvas'),
       U=q('universe'),
+      W=q('warpUniverse'),
+      bridge=q('bridgeToggle'),
+      warpColors=q('warpColors'),
       C={
         shape:q('shape'),start:q('start'),end:q('end'),center:q('center'),
         initial:q('initial'),factor:q('factor'),angle:q('angle'),line:q('line'),
-        mode:q('mode'),delay:q('delay'),observer:q('observer')
+        mode:q('mode'),delay:q('delay'),observer:q('observer'),intensity:q('intensity')
       };
 
 let RUN=0, ACTIVE=false, COMPLETE=false, TRAVELLING=false, TRAVEL_TOKEN=0;
-let LAST_FRAMES=[];
+let TRAVEL_MODE=null, LAST_FRAMES=[];
 
 /*
  * TRAVEL is deliberately logarithmic in observer space.
@@ -157,7 +174,42 @@ function rgb(a,b,t){
   return`rgb(${A.map((v,i)=>Math.round(v+(B[i]-v)*t)).join(',')})`;
 }
 
+function intensityColor(col){
+  let i=+C.intensity.value/100;
+  let m=col.match(/\d+(?:\.\d+)?/g).map(Number);
+  let [r,g,b]=m.map(v=>v/255);
+  let max=Math.max(r,g,b),min=Math.min(r,g,b),h=0,sl=(max+min)/2,d=max-min;
+  let sat=max===min?0:(d/(1-Math.abs(2*sl-1)));
+  if(d!==0){
+    if(max===r)h=((g-b)/d)%6;
+    else if(max===g)h=(b-r)/d+2;
+    else h=(r-g)/d+4;
+    h*=60;if(h<0)h+=360;
+  }
+
+  /*
+   * Intensity is perceptual rather than raw RGB multiplication:
+   * 100% keeps the exact original color; below 100% darkens it;
+   * above 100% increases lightness while preserving hue and saturation,
+   * so red remains red, cyan remains cyan, etc.
+   */
+  let L;
+  if(i<=1)L=sl*i;
+  else{
+    let t=Math.min(1,(i-1));
+    // Move only partway toward white so 200% never washes every hue out.
+    let ceiling=0.82;
+    L=sl+(ceiling-sl)*t;
+  }
+  let c=(1-Math.abs(2*L-1))*sat;
+  let x=c*(1-Math.abs(((h/60)%2)-1));
+  let mm=L-c/2,rr=0,gg=0,bb=0;
+  if(h<60){rr=c;gg=x;}else if(h<120){rr=x;gg=c;}else if(h<180){gg=c;bb=x;}else if(h<240){gg=x;bb=c;}else if(h<300){rr=x;bb=c;}else{rr=c;bb=x;}
+  return `rgb(${Math.round((rr+mm)*255)},${Math.round((gg+mm)*255)},${Math.round((bb+mm)*255)})`;
+}
 function clear(){U.replaceChildren()}
+function clearWarp(){W.replaceChildren();W.setAttribute('opacity','0')}
+function setBridgeHidden(v){document.body.classList.toggle('warp-mode',v)}
 
 function draw(g,col,w){
   let n=document.createElementNS('http://www.w3.org/2000/svg',g.t==='p'?'polygon':g.t==='l'?'polyline':'circle');
@@ -166,10 +218,19 @@ function draw(g,col,w){
     n.setAttribute('cx',0);n.setAttribute('cy',0);n.setAttribute('r',g.r);
   }
   n.setAttribute('fill','none');
-  n.setAttribute('stroke',col);
+  n.setAttribute('stroke',intensityColor(col));
   n.setAttribute('stroke-width',w);
   U.appendChild(n);
   return n;
+}
+
+function applyIntensity(){
+  /* Recolor existing geometry in place: no regeneration and no extra nodes. */
+  let nodes=U.children;
+  for(let i=0;i<nodes.length;i++){
+    let t=nodes.length<=1?0:i/(nodes.length-1);
+    nodes[i].setAttribute('stroke',intensityColor(rgb(C.start.value,C.end.value,t)));
+  }
 }
 
 const nap=ms=>ms?new Promise(r=>setTimeout(r,ms)):new Promise(requestAnimationFrame);
@@ -178,7 +239,7 @@ function frames(){
   let vb=S.viewBox.baseVal,
       b={x:vb.width/2,y:vb.height/2},
       sh=SH[C.shape.value],
-      lim=sh.e(b)*2.5,
+      lim=sh.e(b)*5,
       sc=+C.initial.value,
       f=+C.factor.value,
       a=+C.angle.value,
@@ -227,6 +288,7 @@ function allowed(){return !ACTIVE&&!TRAVELLING&&COMPLETE&&(C.mode.value==='Stati
 
 function observerState(){
   C.observer.disabled=!allowed();
+  q('go').disabled=!allowed();
   q('engage').disabled=!allowed();
 }
 
@@ -237,12 +299,15 @@ function setActive(v){
   observerState();
 }
 
-function setTravel(v){
+function setTravel(v,mode=null){
   TRAVELLING=v;
+  TRAVEL_MODE=v?mode:null;
   q('generate').disabled=v||ACTIVE;
   q('stop').disabled=!(v||ACTIVE);
-  q('engage').classList.toggle('running',v);
-  q('engage').textContent=v?'ABORT':'ENGAGE';
+  q('go').classList.toggle('running',v&&mode==='go');
+  q('go').textContent=v&&mode==='go'?'ABORT':'GO';
+  q('engage').classList.toggle('running',v&&mode==='warp');
+  q('engage').textContent=v&&mode==='warp'?'ABORT':'ENGAGE';
   C.observer.disabled=v||!COMPLETE;
   document.querySelectorAll('input:not(#observer),select').forEach(x=>x.disabled=v||ACTIVE);
   if(!v){
@@ -275,6 +340,9 @@ async function build(id,temporal){
 
 async function go(){
   abortTravel();
+  setBridgeHidden(false);
+  clearWarp();
+  U.setAttribute('opacity','1');
   RUN++;
   let id=RUN,m=C.mode.value,t=m!=='Static';
   COMPLETE=false;
@@ -314,41 +382,161 @@ function easeInOut(t){
   return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
 }
 
-function travel(){
+/*
+ * WARP ENGINE
+ * -----------
+ * The original universe is a geometric progression:
+ *   scale(i) = initial * factor^i
+ * while the Observer contributes:
+ *   visualScale = scale(i) * 10^(-observer)
+ *
+ * Therefore a continuous Observer value can be converted into a continuous
+ * position inside the integer sequence. During WARP we render only the finite
+ * range of indices whose projected geometry can matter to the viewport.
+ * Negative indices are valid: the primordial is a landmark (index 0), not a wall.
+ */
+const WARP_SPEED = 0.34;       // same observer-space speed as stable 0.1.3
+const WARP_MIN_SCALE = 0.20;   // tiny geometry below this is visually irrelevant
+const WARP_MAX_SCALE = 1600;   // safely beyond the viewport
+
+function warpIndexForScale(scale,observer){
+  let initial=+C.initial.value,
+      factor=+C.factor.value;
+  return (Math.log(scale/initial)+observer*Math.LN10)/Math.log(factor);
+}
+
+function warpWhite(){
+  /* 100% = pure white. Below it softens the warp field; above 100% stays white. */
+  let i=Math.min(1,+C.intensity.value/100);
+  let v=Math.round(255*i);
+  return `rgb(${v},${v},${v})`;
+}
+
+function renderWarp(observer){
+  let sh=SH[C.shape.value],
+      initial=+C.initial.value,
+      factor=+C.factor.value,
+      angle=+C.angle.value,
+      line=+C.line.value,
+      minIndex=Math.floor(warpIndexForScale(WARP_MIN_SCALE,observer))-2,
+      maxIndex=Math.ceil(warpIndexForScale(WARP_MAX_SCALE,observer))+2,
+      col=warpWhite();
+
+  W.replaceChildren();
+  W.removeAttribute('transform');
+
+  for(let i=minIndex;i<=maxIndex;i++){
+    let scale=initial*Math.pow(factor,i-observer*Math.LN10/Math.log(factor));
+    if(scale<WARP_MIN_SCALE*.25 || scale>WARP_MAX_SCALE*factor)continue;
+    let g=rot(sh.g(scale),i,angle);
+    let n=document.createElementNS('http://www.w3.org/2000/svg',g.t==='p'?'polygon':g.t==='l'?'polyline':'circle');
+    if(g.t==='p'||g.t==='l')n.setAttribute('points',g.p.map(v=>v.join(',')).join(' '));
+    else{n.setAttribute('cx',0);n.setAttribute('cy',0);n.setAttribute('r',g.r);}
+    n.setAttribute('fill','none');
+    if(warpColors.checked){
+      const arrival = rgb(C.start.value,C.end.value,1);
+      n.setAttribute('stroke', (Math.abs(i)%2===0) ? col : arrival);
+    }else{
+      n.setAttribute('stroke',col);
+    }
+    n.setAttribute('stroke-width',line);
+    W.appendChild(n);
+  }
+
+  q('ov').textContent=`WARP ${(-observer).toFixed(2)}`;
+}
+
+function normalTravel(){
   if(!allowed())return;
 
   let start=+C.observer.value,
-      target=arrivalValue();
-
-  /* Already at, or closer than, the calculated arrival point. */
-  if(start<=target+.0001){
-    C.observer.value=target;
-    applyObserver();
-    return;
-  }
-
-  let distance=Math.abs(target-start),
-      duration=Math.max(700,distance/TRAVEL_SPEED*1000),
+      target=arrivalValue(),
       token=++TRAVEL_TOKEN,
-      began=null;
+      began=null,
+      distance=Math.abs(target-start),
+      duration=Math.max(700,distance/TRAVEL_SPEED*1000);
 
-  setTravel(true);
+  clearWarp();
+  setBridgeHidden(false);
+  setTravel(true,'go');
 
   function step(now){
     if(token!==TRAVEL_TOKEN)return;
-
     if(began===null)began=now;
-    let t=Math.min(1,(now-began)/duration);
-    let p=easeInOut(t);
+
+    let t=Math.min(1,(now-began)/duration),
+        p=easeInOut(t);
 
     C.observer.value=start+(target-start)*p;
     applyObserver();
 
-    if(t<1){
-      requestAnimationFrame(step);
+    if(t<1)requestAnimationFrame(step);
+    else setTravel(false);
+  }
+  requestAnimationFrame(step);
+}
+
+const WARP_TRANSITION_MS = 520;
+
+function travel(){
+  if(!allowed())return;
+
+  let start=+C.observer.value,
+      target=arrivalValue(),
+      token=++TRAVEL_TOKEN,
+      began=null,
+      phase='approach',
+      warpObserver=start,
+      approachDistance=Math.abs(target-start),
+      approachDuration=Math.max(700,approachDistance/TRAVEL_SPEED*1000),
+      transitionStart=null;
+
+  clearWarp();
+  setBridgeHidden(true);
+  bridge.setAttribute('aria-label','Show bridge controls');
+  setTravel(true,'warp');
+
+  function step(now){
+    if(token!==TRAVEL_TOKEN)return;
+    if(began===null)began=now;
+
+    if(phase==='approach'){
+      let t=Math.min(1,(now-began)/approachDuration),
+          p=easeInOut(t);
+
+      C.observer.value=start+(target-start)*p;
+      applyObserver();
+
+      if(t>=1){
+        phase='transition';
+        warpObserver=target;
+        transitionStart=now;
+        renderWarp(warpObserver);
+        W.setAttribute('opacity','0');
+      }
+    }else if(phase==='transition'){
+      let a=Math.min(1,(now-transitionStart)/WARP_TRANSITION_MS);
+      a=a*a*(3-2*a);
+      U.setAttribute('opacity',String(1-a));
+      W.setAttribute('opacity',String(a));
+
+      if(a>=.999){
+        clear();
+        U.removeAttribute('transform');
+        U.setAttribute('opacity','1');
+        W.setAttribute('opacity','1');
+        phase='warp';
+        began=now;
+      }
     }else{
-      setTravel(false);
+      let elapsed=(now-began)/1000;
+      warpObserver=target-WARP_SPEED*elapsed;
+      C.observer.value=Math.max(+C.observer.min,Math.min(+C.observer.max,warpObserver));
+      renderWarp(warpObserver);
+      W.setAttribute('opacity','1');
     }
+
+    requestAnimationFrame(step);
   }
 
   requestAnimationFrame(step);
@@ -356,7 +544,29 @@ function travel(){
 
 function abortTravel(){
   TRAVEL_TOKEN++;
-  if(TRAVELLING)setTravel(false);
+  setBridgeHidden(false);
+  if(TRAVELLING){
+    let mode=TRAVEL_MODE;
+
+    if(mode==='warp'){
+      let v=+C.observer.value;
+      clearWarp();
+      clear();
+      let F=LAST_FRAMES;
+      for(let i=0;i<F.length;i++){
+        draw(F[i],rgb(C.start.value,C.end.value,F.length<=1?0:i/(F.length-1)),+C.line.value);
+      }
+      U.setAttribute('opacity','1');
+      C.observer.value=v;
+      applyObserver();
+    }else{
+      clearWarp();
+      U.setAttribute('opacity','1');
+      applyObserver();
+    }
+
+    setTravel(false);
+  }
 }
 
 function labels(){
@@ -367,21 +577,51 @@ function labels(){
   q('fv').textContent=(+C.factor.value).toFixed(3);
   q('av').textContent=(+C.angle.value).toFixed(1)+'°';
   q('lv').textContent=(+C.line.value).toFixed(2);
+  q('tv').textContent=Math.round(+C.intensity.value)+'%';
   q('dv').textContent=C.delay.value+' ms';
   applyObserver();
   observerState();
 }
 
+function toggleBridgeOrPanel(){
+  if(document.body.classList.contains('warp-mode')){
+    // First G after entering WARP must restore the bridge immediately.
+    setBridgeHidden(false);
+    return;
+  }
+  q('panel').classList.toggle('hidden');
+}
+
+bridge.onclick=()=>toggleBridgeOrPanel();
+
+document.addEventListener('keydown', e=>{
+  if(e.key.toLowerCase()!=='g')return;
+  const tag=(e.target.tagName||'').toLowerCase();
+  if(tag==='input'||tag==='select'||tag==='textarea'||e.target.isContentEditable)return;
+  toggleBridgeOrPanel();
+  e.preventDefault();
+});
+
 q('generate').onclick=go;
+q('go').onclick=()=>TRAVELLING?abortTravel():normalTravel();
 q('engage').onclick=()=>TRAVELLING?abortTravel():travel();
 q('stop').onclick=()=>{
-  if(TRAVELLING)abortTravel();
+  if(TRAVELLING){
+    abortTravel();
+    return;
+  }
   RUN++;
   COMPLETE=false;
   setActive(false);
   observerState();
 };
-C.observer.oninput=applyObserver;
+C.observer.oninput=()=>{
+  if(TRAVELLING&&TRAVEL_MODE==='warp')return;
+  applyObserver();
+};
+warpColors.onchange=()=>{
+  if(TRAVELLING&&TRAVEL_MODE==='warp')renderWarp(+C.observer.value);
+};
 
 C.mode.onchange=()=>{
   abortTravel();
@@ -394,6 +634,9 @@ C.mode.onchange=()=>{
 
 q('reset').onclick=()=>{
   abortTravel();
+  setBridgeHidden(false);
+  clearWarp();
+  U.setAttribute('opacity','1');
   RUN++;
   COMPLETE=false;
   LAST_FRAMES=[];
@@ -406,6 +649,7 @@ q('reset').onclick=()=>{
   C.factor.value='1.075';
   C.angle.value='0';
   C.line.value='2.50';
+  C.intensity.value='100';
   C.mode.value='Forward';
   C.delay.value='25';
   C.observer.value='0';
@@ -418,15 +662,15 @@ q('reset').onclick=()=>{
 q('toggle').onclick=()=>q('panel').classList.toggle('hidden');
 
 document.querySelectorAll('input:not(#observer),select').forEach(x=>{
-  if(x!==C.mode)x.oninput=x.onchange=labels;
+  if(x!==C.mode&&x!==C.intensity)x.oninput=x.onchange=labels;
 });
 
-document.onkeydown=e=>{
-  if(e.key.toLowerCase()==='g'&&!['INPUT','SELECT','TEXTAREA'].includes(document.activeElement.tagName)){
-    q('panel').classList.toggle('hidden');
-    e.preventDefault();
-  }
+C.intensity.oninput=()=>{
+  labels();
+  if(TRAVELLING&&TRAVEL_MODE==='warp')renderWarp(+C.observer.value);
+  else applyIntensity();
 };
+C.intensity.onchange=C.intensity.oninput;
 
 labels();
 go();
