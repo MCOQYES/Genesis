@@ -3,11 +3,27 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>GENESIS 0.2 — FULL WARP EXPERIENCE</title>
+<title>GENESIS 0.3 — SHAPES · SPACE · CIRCUS</title>
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000;color:#eee;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-svg{width:100vw;height:100vh;display:block}
+#spaceBackgroundLayer{
+  position:fixed;
+  inset:0;
+  background:#000 url("space-background.jpg") center center / cover no-repeat;
+  opacity:1;
+  pointer-events:none;
+  z-index:0;
+  display:none;
+}
+svg {
+    position: relative;
+    background: transparent;
+    z-index: 1;
+    width: 100vw;
+    height: 100vh;
+    display: block;
+}
 #panel{position:fixed;top:18px;left:18px;width:min(360px,calc(100vw - 36px));max-height:calc(100vh - 36px);overflow-y:auto;padding:14px;background:rgba(8,8,8,.90);border:1px solid #333;border-radius:12px;z-index:10;backdrop-filter:blur(10px)}
 #panel.hidden{display:none}
 .brand{display:flex;gap:10px;align-items:center;margin-bottom:12px}
@@ -19,6 +35,11 @@ label{display:block;margin-bottom:5px;opacity:.74}
 .value{float:right;opacity:.72}
 input[type=range],select{width:100%}
 input[type=color]{width:72px;height:38px;padding:4px;border:0;background:#ddd}
+.color-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:11px 0}
+.color-cell{min-width:0}
+.color-cell label{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.color-cell input[type=color]{width:100%;height:34px;display:block}
+#geometryAngleRow,#starPointsRow,#radialRaysRow{display:none}
 select{height:28px;font-size:15px}
 button{width:100%;margin-top:7px;padding:8px;background:#111;color:#eee;border:1px solid #333;border-radius:7px;font-size:15px;letter-spacing:.03em}
 button:disabled,input:disabled,select:disabled{opacity:.35}
@@ -41,9 +62,11 @@ body.warp-mode #bridgeToggle{display:block !important}
   h1{font-size:18px}.row{margin:9px 0}
   #toggle{top:10px;right:10px;width:42px;height:42px}
 }
+
 </style>
 </head>
 <body>
+<div id="spaceBackgroundLayer" aria-hidden="true"></div>
 <svg id="canvas" viewBox="-500 -500 1000 1000"><g id="universe"></g><g id="warpUniverse" opacity="0"></g></svg>
 <button id="bridgeToggle" aria-label="Show bridge controls">G</button>
 
@@ -52,23 +75,40 @@ body.warp-mode #bridgeToggle{display:block !important}
 <div id="panel">
   <div class="brand">
     <div class="mark">G</div>
-    <div><h1>GENESIS 0.2</h1><div class="sub">GO · WARP · INFINITE TRAVEL</div></div>
+    <div><h1>GENESIS 0.3</h1><div class="sub">SHAPES · SPACE · CIRCUS · WARP</div></div>
   </div>
 
   <div class="row"><label>Shape</label>
     <select id="shape">
       <option>Triangle</option><option>Square</option><option selected>Pentagon</option>
-      <option>Hexagon</option><option>Octagon</option><option>Circle</option><option>Line</option>
+      <option>Hexagon</option><option>Octagon</option><option>Circle</option>
+      <option>Line</option><option>X</option><option>Cross</option>
+      <option>Parallel Vertical</option><option>Parallel Horizontal</option>
+      <option>Arc</option><option>Angle</option><option>Star</option><option>Radial</option>
     </select>
   </div>
+  <div class="row" id="geometryAngleRow"><label>Angle <span id="gav" class="value"></span></label>
+    <input id="geometryAngle" type="range" min="0" max="360" step="1" value="90">
+  </div>
+  <div class="row" id="starPointsRow"><label>Points <span id="spv" class="value"></span></label>
+    <input id="starPoints" type="range" min="5" max="12" step="1" value="5">
+  </div>
+  <div class="row" id="radialRaysRow"><label>Rays <span id="rrv" class="value"></span></label>
+    <input id="radialRays" type="range" min="3" max="72" step="1" value="24">
+  </div>
 
-  <div class="row"><label>Start <span id="sv" class="value"></span></label><input id="start" type="color" value="#ffffff"></div>
-  <div class="row"><label>End <span id="ev" class="value"></span></label><input id="end" type="color" value="#00ffff"></div>
+  <div class="color-row">
+    <div class="color-cell"><label>Start <span id="sv" class="value"></span></label><input id="start" type="color" value="#ffffff"></div>
+    <div class="color-cell"><label>End <span id="ev" class="value"></span></label><input id="end" type="color" value="#00ffff"></div>
+  </div>
+  <div class="row"><label>Color Mode</label>
+    <select id="colorMode"><option value="Gradient" selected>Gradient</option><option value="Alternate">Alternate</option></select>
+  </div>
   <div class="row"><label>Palette Center <span id="cv" class="value"></span></label><input id="center" type="range" min=".05" max=".95" step=".01" value=".50"></div>
   <div class="row"><label>Initial Scale <span id="iv" class="value"></span></label><input id="initial" type="range" min=".1" max="100" step=".1" value="50"></div>
-  <div class="row"><label>Scale Factor <span id="fv" class="value"></span></label><input id="factor" type="range" min="1.001" max="1.15" step=".001" value="1.075"></div>
+  <div class="row"><label>Scale Factor <span id="fv" class="value"></span></label><input id="factor" type="range" min="1.001" max="1.5" step=".001" value="1.075"></div>
   <div class="row"><label>Rotation <span id="av" class="value"></span></label><input id="angle" type="range" min="0" max="180" step=".5" value="0"></div>
-  <div class="row"><label>Line Width <span id="lv" class="value"></span></label><input id="line" type="range" min=".05" max="5" step=".01" value="2.50"></div>
+  <div class="row"><label>Line Width <span id="lv" class="value"></span></label><input id="line" type="range" min=".05" max="10" step=".01" value="2.50"></div>
   <div class="row"><label>Intensity <span id="tv" class="value"></span></label><input id="intensity" type="range" min="25" max="200" step="1" value="100"></div>
 
   <div class="row"><label>Mode</label>
@@ -91,24 +131,29 @@ body.warp-mode #bridgeToggle{display:block !important}
   </div>
   <button id="engage" disabled>ENGAGE</button>
   <label id="warpToggle"><input type="checkbox" id="warpColors"> Genesis colors in WARP</label>
+  <label id="spaceToggle"><input type="checkbox" id="spaceBackground"> Space background</label>
   <button id="reset">RESET</button>
 
   <div class="hint">
-    GENESIS 0.2.1 — GO preserves normal Genesis exploration: travel toward the generated depth, STOP anywhere, inspect the geometry. ENGAGE reserves the infinite mathematical sequence for WARP. The hand-off is phase-aligned and crossfaded so the voyage changes engines without a hard visual cut.
+    GENESIS 0.3 — SHAPES · SPACE · CIRCUS. Gradient preserves the normal Start→End palette; Alternate assigns Start and End to consecutive generated figures. GO preserves normal exploration, while ENGAGE reserves the infinite mathematical sequence for WARP. Optional space background is a fixed visual layer only; it is OFF by default. Press H for Help.
   </div>
+  <div style="margin-top:7px;text-align:right;font-size:10px;opacity:.45"><a href="manual.html" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;letter-spacing:.08em">HELP · H</a></div>
 </div>
 
 <script>
+  
 const q=id=>document.getElementById(id),
       S=q('canvas'),
       U=q('universe'),
       W=q('warpUniverse'),
       bridge=q('bridgeToggle'),
       warpColors=q('warpColors'),
+      spaceBackground=q('spaceBackground'),
+      spaceLayer=q('spaceBackgroundLayer'),
       C={
-        shape:q('shape'),start:q('start'),end:q('end'),center:q('center'),
+        shape:q('shape'),start:q('start'),end:q('end'),colorMode:q('colorMode'),center:q('center'),
         initial:q('initial'),factor:q('factor'),angle:q('angle'),line:q('line'),
-        mode:q('mode'),delay:q('delay'),observer:q('observer'),intensity:q('intensity')
+        mode:q('mode'),delay:q('delay'),observer:q('observer'),intensity:q('intensity'),geometryAngle:q('geometryAngle'),starPoints:q('starPoints'),radialRays:q('radialRays')
       };
 
 let RUN=0, ACTIVE=false, COMPLETE=false, TRAVELLING=false, TRAVEL_TOKEN=0;
@@ -151,12 +196,79 @@ const SH={
   Hexagon:poly(6),
   Octagon:poly(8),
   Circle:{g:s=>({t:'c',r:s}),e:b=>Math.min(b.x,b.y)},
-  Line:{g:s=>({t:'l',p:[[-s,0],[s,0]]}),e:b=>Math.min(b.x,b.y)}
+  Line:{g:s=>({t:'l',p:[[-s,0],[s,0]]}),e:b=>Math.min(b.x,b.y)},
+  X:{g:s=>({t:'m',g:[
+    {t:'l',p:[[-s,-s],[s,s]]},
+    {t:'l',p:[[-s,s],[s,-s]]}
+  ]}),e:b=>Math.min(b.x,b.y)},
+  Cross:{g:s=>({t:'m',g:[
+    {t:'l',p:[[-s,0],[s,0]]},
+    {t:'l',p:[[0,-s],[0,s]]}
+  ]}),e:b=>Math.min(b.x,b.y)},
+  'Parallel Vertical':{g:s=>({t:'m',g:[
+    {t:'l',p:[[-10,-s],[-10,s]]},
+    {t:'l',p:[[10,-s],[10,s]]}
+  ]}),e:b=>Math.min(b.x,b.y)},
+  'Parallel Horizontal':{g:s=>({t:'m',g:[
+    {t:'l',p:[[-s,-10],[s,-10]]},
+    {t:'l',p:[[-s,10],[s,10]]}
+  ]}),e:b=>Math.min(b.x,b.y)},
+  Arc:{
+    g:s=>{
+      const deg=+C.geometryAngle.value;
+      const n=Math.max(2,Math.ceil(deg/3));
+      const p=[];
+      for(let i=0;i<=n;i++){
+        const a=(deg*i/n)*Math.PI/180;
+        p.push([s*Math.cos(a),-s*Math.sin(a)]);
+      }
+      return{t:'l',p};
+    },
+    e:b=>Math.min(b.x,b.y)
+  },
+  Angle:{
+    g:s=>{
+      const deg=+C.geometryAngle.value*Math.PI/180;
+      const c=Math.cos(deg),d=-Math.sin(deg);
+      return{t:'m',g:[
+        {t:'l',p:[[-s,0],[s,0]]},
+        {t:'l',p:[[-s*c,-s*d],[s*c,s*d]]}
+      ]};
+    },
+    e:b=>Math.min(b.x,b.y)
+  },
+  Star:{
+    g:s=>{
+      const n=Math.max(5,Math.round(+C.starPoints.value));
+      const innerRatio=(n===5)?(3-Math.sqrt(5))/2:0.40;
+      const p=[];
+      for(let i=0;i<2*n;i++){
+        const a=-Math.PI/2+i*Math.PI/n;
+        const r=(i%2===0)?s:s*innerRatio;
+        p.push([r*Math.cos(a),r*Math.sin(a)]);
+      }
+      return{t:'p',p};
+    },
+    e:b=>Math.min(b.x,b.y)
+  },
+  Radial:{
+    g:s=>{
+      const rays=Math.max(3,Math.round(+C.radialRays.value));
+      const g=[];
+      for(let i=0;i<rays;i++){
+        const a=-Math.PI/2+i*2*Math.PI/rays;
+        g.push({t:'l',p:[[0,0],[s*Math.cos(a),s*Math.sin(a)]]});
+      }
+      return{t:'m',g};
+    },
+    e:b=>Math.min(b.x,b.y)
+  }
 };
 
 function rot(g,i,a){
   if(g.t==='c')return g;
   let r=i*a*Math.PI/180,c=Math.cos(r),s=Math.sin(r);
+  if(g.t==='m')return{t:'m',g:g.g.map(x=>rot(x,i,a))};
   return{t:g.t,p:g.p.map(([x,y])=>[x*c-y*s,x*s+y*c])};
 }
 
@@ -207,11 +319,22 @@ function intensityColor(col){
   if(h<60){rr=c;gg=x;}else if(h<120){rr=x;gg=c;}else if(h<180){gg=c;bb=x;}else if(h<240){gg=x;bb=c;}else if(h<300){rr=x;bb=c;}else{rr=c;bb=x;}
   return `rgb(${Math.round((rr+mm)*255)},${Math.round((gg+mm)*255)},${Math.round((bb+mm)*255)})`;
 }
+
+function buildStarfield(){
+  spaceLayer.style.display = spaceBackground.checked ? 'block' : 'none';
+}
+
 function clear(){U.replaceChildren()}
 function clearWarp(){W.replaceChildren();W.setAttribute('opacity','0')}
 function setBridgeHidden(v){document.body.classList.toggle('warp-mode',v)}
 
-function draw(g,col,w){
+function draw(g,col,w,parent=U){
+  if(g.t==='m'){
+    let group=document.createElementNS('http://www.w3.org/2000/svg','g');
+    for(let i=0;i<g.g.length;i++)draw(g.g[i],col,w,group);
+    parent.appendChild(group);
+    return group;
+  }
   let n=document.createElementNS('http://www.w3.org/2000/svg',g.t==='p'?'polygon':g.t==='l'?'polyline':'circle');
   if(g.t==='p'||g.t==='l')n.setAttribute('points',g.p.map(v=>v.join(',')).join(' '));
   else{
@@ -220,17 +343,15 @@ function draw(g,col,w){
   n.setAttribute('fill','none');
   n.setAttribute('stroke',intensityColor(col));
   n.setAttribute('stroke-width',w);
-  U.appendChild(n);
+  parent.appendChild(n);
   return n;
 }
 
 function applyIntensity(){
-  /* Recolor existing geometry in place: no regeneration and no extra nodes. */
-  let nodes=U.children;
-  for(let i=0;i<nodes.length;i++){
-    let t=nodes.length<=1?0:i/(nodes.length-1);
-    nodes[i].setAttribute('stroke',intensityColor(rgb(C.start.value,C.end.value,t)));
-  }
+  /* Recolor existing geometry in place: each top-level child is one generated figure. */
+  let frames=Array.from(U.children);
+  let total=frames.length;
+  for(let i=0;i<total;i++)recolorNode(frames[i],frameColor(i,total));
 }
 
 const nap=ms=>ms?new Promise(r=>setTimeout(r,ms)):new Promise(requestAnimationFrame);
@@ -265,6 +386,7 @@ function applyObserver(){
 /* Radius of the primordial geometry in universe coordinates. */
 function extent(g){
   if(g.t==='c')return g.r;
+  if(g.t==='m')return Math.max(...g.g.map(extent));
   return Math.max(...g.p.map(([x,y])=>Math.hypot(x,y)));
 }
 
@@ -316,6 +438,22 @@ function setTravel(v,mode=null){
   }
 }
 
+function frameColor(i,total){
+  if(C.colorMode.value==='Alternate'){
+    let hex=i%2===0?C.start.value:C.end.value;
+    return rgb(hex,hex,0);
+  }
+  return rgb(C.start.value,C.end.value,total<=1?0:i/(total-1));
+}
+
+function recolorNode(node,col){
+  if(node.children.length){
+    for(const child of node.children)recolorNode(child,col);
+    return;
+  }
+  if(node.matches && node.matches('polyline,polygon,circle'))node.setAttribute('stroke',intensityColor(col));
+}
+
 async function build(id,temporal){
   clear();
   COMPLETE=false;
@@ -330,7 +468,7 @@ async function build(id,temporal){
     if(id!==RUN)return null;
     nodes.push(draw(
       F[i],
-      rgb(C.start.value,C.end.value,F.length<=1?0:i/(F.length-1)),
+      frameColor(i,F.length),
       +C.line.value
     ));
     if(temporal)await nap(+C.delay.value);
@@ -429,18 +567,21 @@ function renderWarp(observer){
     let scale=initial*Math.pow(factor,i-observer*Math.LN10/Math.log(factor));
     if(scale<WARP_MIN_SCALE*.25 || scale>WARP_MAX_SCALE*factor)continue;
     let g=rot(sh.g(scale),i,angle);
-    let n=document.createElementNS('http://www.w3.org/2000/svg',g.t==='p'?'polygon':g.t==='l'?'polyline':'circle');
-    if(g.t==='p'||g.t==='l')n.setAttribute('points',g.p.map(v=>v.join(',')).join(' '));
-    else{n.setAttribute('cx',0);n.setAttribute('cy',0);n.setAttribute('r',g.r);}
-    n.setAttribute('fill','none');
-    if(warpColors.checked){
-      const arrival = rgb(C.start.value,C.end.value,1);
-      n.setAttribute('stroke', (Math.abs(i)%2===0) ? col : arrival);
-    }else{
-      n.setAttribute('stroke',col);
-    }
-    n.setAttribute('stroke-width',line);
-    W.appendChild(n);
+    let drawWarpGeometry=(piece)=>{
+      let n=document.createElementNS('http://www.w3.org/2000/svg',piece.t==='p'?'polygon':piece.t==='l'?'polyline':'circle');
+      if(piece.t==='p'||piece.t==='l')n.setAttribute('points',piece.p.map(v=>v.join(',')).join(' '));
+      else{n.setAttribute('cx',0);n.setAttribute('cy',0);n.setAttribute('r',piece.r);}
+      n.setAttribute('fill','none');
+      if(warpColors.checked){
+        const arrival = rgb(C.start.value,C.end.value,1);
+        n.setAttribute('stroke', (Math.abs(i)%2===0) ? col : arrival);
+      }else{
+        n.setAttribute('stroke',col);
+      }
+      n.setAttribute('stroke-width',line);
+      W.appendChild(n);
+    };
+    if(g.t==='m')g.g.forEach(drawWarpGeometry);else drawWarpGeometry(g);
   }
 
   q('ov').textContent=`WARP ${(-observer).toFixed(2)}`;
@@ -554,7 +695,7 @@ function abortTravel(){
       clear();
       let F=LAST_FRAMES;
       for(let i=0;i<F.length;i++){
-        draw(F[i],rgb(C.start.value,C.end.value,F.length<=1?0:i/(F.length-1)),+C.line.value);
+        draw(F[i],frameColor(i,F.length),+C.line.value);
       }
       U.setAttribute('opacity','1');
       C.observer.value=v;
@@ -576,7 +717,14 @@ function labels(){
   q('iv').textContent=(+C.initial.value).toFixed(1);
   q('fv').textContent=(+C.factor.value).toFixed(3);
   q('av').textContent=(+C.angle.value).toFixed(1)+'°';
+  q('gav').textContent=(+C.geometryAngle.value).toFixed(0)+'°';
+  q('spv').textContent=Math.round(+C.starPoints.value);
+  q('rrv').textContent=Math.round(+C.radialRays.value);
+  q('geometryAngleRow').style.display=(C.shape.value==='Arc'||C.shape.value==='Angle')?'block':'none';
+  q('starPointsRow').style.display=(C.shape.value==='Star')?'block':'none';
+  q('radialRaysRow').style.display=(C.shape.value==='Radial')?'block':'none';
   q('lv').textContent=(+C.line.value).toFixed(2);
+  q('geometryAngleRow').style.display=(C.shape.value==='Arc'||C.shape.value==='Angle')?'block':'none';
   q('tv').textContent=Math.round(+C.intensity.value)+'%';
   q('dv').textContent=C.delay.value+' ms';
   applyObserver();
@@ -595,11 +743,15 @@ function toggleBridgeOrPanel(){
 bridge.onclick=()=>toggleBridgeOrPanel();
 
 document.addEventListener('keydown', e=>{
-  if(e.key.toLowerCase()!=='g')return;
   const tag=(e.target.tagName||'').toLowerCase();
   if(tag==='input'||tag==='select'||tag==='textarea'||e.target.isContentEditable)return;
-  toggleBridgeOrPanel();
-  e.preventDefault();
+  if(e.key.toLowerCase()==='g'){
+    toggleBridgeOrPanel();
+    e.preventDefault();
+  }else if(e.key.toLowerCase()==='h'){
+    window.open('manual.html','_blank','noopener');
+    e.preventDefault();
+  }
 });
 
 q('generate').onclick=go;
@@ -622,6 +774,7 @@ C.observer.oninput=()=>{
 warpColors.onchange=()=>{
   if(TRAVELLING&&TRAVEL_MODE==='warp')renderWarp(+C.observer.value);
 };
+spaceBackground.addEventListener('change',buildStarfield);
 
 C.mode.onchange=()=>{
   abortTravel();
@@ -644,17 +797,21 @@ q('reset').onclick=()=>{
   C.shape.value='Pentagon';
   C.start.value='#ffffff';
   C.end.value='#00ffff';
+  C.colorMode.value='Gradient';
   C.center.value='.50';
   C.initial.value='50';
   C.factor.value='1.075';
   C.angle.value='0';
+  C.geometryAngle.value='90';
   C.line.value='2.50';
   C.intensity.value='100';
   C.mode.value='Forward';
   C.delay.value='25';
   C.observer.value='0';
+  spaceBackground.checked=false;
 
   labels();
+  buildStarfield();
   setActive(false);
   go();
 };
@@ -672,6 +829,9 @@ C.intensity.oninput=()=>{
 };
 C.intensity.onchange=C.intensity.oninput;
 
+spaceBackground.checked=false;
+spaceLayer.style.display='none';
+buildStarfield();
 labels();
 go();
 </script>
