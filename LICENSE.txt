@@ -1,0 +1,10 @@
+GENESIS
+
+Copyright © 2026 MASTRO Inc.
+Created by MCO with ASTER.
+
+All rights reserved.
+
+This repository and its contents are proprietary. No permission is granted to reproduce, modify, distribute, sublicense, publish, or commercially exploit the source code or derivative works without prior written permission from MASTRO Inc.
+
+The GENESIS name, GENESIS Mark, visual identity, original architecture, source code, documentation, and original generated-art framework are proprietary to MASTRO Inc., except for third-party components or assets that may be subject to their own terms.
