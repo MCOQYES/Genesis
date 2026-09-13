@@ -1,6 +1,6 @@
 <!doctype html>
 <!--
-  GENESIS 0.4.2 — PERSISTENCE · CONFIG
+  GENESIS 0.4.3 — PERSISTENCE · PNG
   Original generative-art engine created by MCO with ASTER.
   © 2026 MASTRO Inc. All rights reserved.
 -->
@@ -8,7 +8,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>GENESIS 0.4.2 — PERSISTENCE · CONFIG</title>
+<title>GENESIS 0.4.3 — PERSISTENCE · PNG</title>
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000;color:#eee;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
@@ -92,16 +92,16 @@ body.warp-mode #bridgeToggle{display:block !important}
         <polygon class="g3" points="0,-11.2 6.59,-3.46 4.26,9.06 -4.26,9.06 -6.59,-3.46" transform="rotate(14.4)"/>
       </svg>
     </div>
-    <div><h1>GENESIS 0.4.2</h1><div class="sub">PERSISTENCE · CONFIG</div></div>
+    <div><h1>GENESIS 0.4.3</h1><div class="sub">PERSISTENCE · PNG</div></div>
   </div>
 
   <div class="row"><label>Shape</label>
     <select id="shape">
-      <option>Triangle</option><option>Square</option><option selected>Pentagon</option>
+      <option>Triangle</option><option>Square</option><option>Pentagon</option>
       <option>Hexagon</option><option>Octagon</option><option>Circle</option>
       <option>Line</option><option>X</option><option>Cross</option>
       <option>Parallel Vertical</option><option>Parallel Horizontal</option>
-      <option>Arc</option><option>Angle</option><option>Star</option><option>Radial</option>
+      <option>Arc</option><option>Angle</option><option>Star</option><option selected>Radial</option>
     </select>
   </div>
   <div class="row" id="geometryAngleRow"><label>Angle <span id="gav" class="value"></span></label>
@@ -111,21 +111,21 @@ body.warp-mode #bridgeToggle{display:block !important}
     <input id="starPoints" type="range" min="5" max="12" step="1" value="5">
   </div>
   <div class="row" id="radialRaysRow"><label>Rays <span id="rrv" class="value"></span></label>
-    <input id="radialRays" type="range" min="3" max="72" step="1" value="24">
+    <input id="radialRays" type="range" min="3" max="72" step="1" value="15">
   </div>
 
   <div class="color-row">
     <div class="color-cell"><label>Start <span id="sv" class="value"></span></label><input id="start" type="color" value="#ffffff"></div>
-    <div class="color-cell"><label>End <span id="ev" class="value"></span></label><input id="end" type="color" value="#00ffff"></div>
+    <div class="color-cell"><label>End <span id="ev" class="value"></span></label><input id="end" type="color" value="#a700bd"></div>
   </div>
   <div class="row"><label>Color Mode</label>
-    <select id="colorMode"><option value="Gradient" selected>Gradient</option><option value="Alternate">Alternate</option></select>
+    <select id="colorMode"><option value="Gradient">Gradient</option><option value="Alternate" selected>Alternate</option></select>
   </div>
   <div class="row"><label>Palette Center <span id="cv" class="value"></span></label><input id="center" type="range" min=".05" max=".95" step=".01" value=".50"></div>
   <div class="row"><label>Initial Scale <span id="iv" class="value"></span></label><input id="initial" type="range" min=".1" max="100" step=".1" value="50"></div>
-  <div class="row"><label>Scale Factor <span id="fv" class="value"></span></label><input id="factor" type="range" min="1.001" max="1.5" step=".001" value="1.075"></div>
-  <div class="row"><label>Rotation <span id="av" class="value"></span></label><input id="angle" type="range" min="0" max="180" step=".5" value="0"></div>
-  <div class="row"><label>Line Width <span id="lv" class="value"></span></label><input id="line" type="range" min=".05" max="10" step=".01" value="2.50"></div>
+  <div class="row"><label>Scale Factor <span id="fv" class="value"></span></label><input id="factor" type="range" min="1.001" max="1.5" step=".001" value="1.1"></div>
+  <div class="row"><label>Rotation <span id="av" class="value"></span></label><input id="angle" type="range" min="0" max="180" step=".5" value="33"></div>
+  <div class="row"><label>Line Width <span id="lv" class="value"></span></label><input id="line" type="range" min=".05" max="10" step=".01" value="3.00"></div>
   <div class="row"><label>Intensity <span id="tv" class="value"></span></label><input id="intensity" type="range" min="25" max="200" step="1" value="100"></div>
 
   <div class="row"><label>Mode</label>
@@ -147,7 +147,7 @@ body.warp-mode #bridgeToggle{display:block !important}
     <button id="stop" disabled>STOP</button>
   </div>
   <button id="engage" disabled>ENGAGE</button>
-  <label id="warpToggle"><input type="checkbox" id="warpColors"> Genesis colors in WARP</label>
+  <label id="warpToggle"><input type="checkbox" id="warpColors" checked> Genesis colors in WARP</label>
   <label id="spaceToggle"><input type="checkbox" id="spaceBackground"> Space background</label>
   <div class="control-grid">
     <button id="exportConfig">EXPORT CONFIG</button>
@@ -156,8 +156,9 @@ body.warp-mode #bridgeToggle{display:block !important}
   <input id="configFile" type="file" accept="application/json,.json" hidden>
   <button id="reset">RESET</button>
 
+  <button id="exportImage">EXPORT IMAGE</button>
   <div class="hint">
-    GENESIS 0.4.2 — Persistence and Config. Export your current generation settings and restore them later without rebuilding them by hand. Gradient preserves the normal Start→End palette; Alternate assigns Start and End to consecutive generated figures. GO preserves normal exploration, while ENGAGE reserves the infinite mathematical sequence for WARP. Optional space background is a fixed visual layer only; it is OFF by default. Press H for Help.
+    GENESIS 0.4.3 — Persistence and PNG. Export the current generated universe as an image without the interface or decorative background. EXPORT CONFIG saves the generation state; IMPORT CONFIG restores it. Gradient preserves the normal Start→End palette; Alternate assigns Start and End to consecutive generated figures. GO preserves normal exploration, while ENGAGE reserves the infinite mathematical sequence for WARP. Press H for Help.
   </div>
   <div style="margin-top:7px;text-align:right;font-size:10px;opacity:.45"><a href="manual.html" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;letter-spacing:.08em">HELP · H</a></div>
   <div class="genesis-signature">MCO · ASTER · © 2026 MASTRO Inc.</div>
@@ -748,7 +749,7 @@ function rangeValid(id,value){
 function currentConfig(){
   return {
     schemaVersion:CONFIG_SCHEMA_VERSION,
-    genesisVersion:'0.4.2',
+    genesisVersion:'0.4.3',
     generation:{
       shape:C.shape.value,
       points:Math.round(configNumber('starPoints')),
@@ -844,6 +845,43 @@ function exportConfig(){
   downloadText('genesis-config.json',JSON.stringify(currentConfig(),null,2),'application/json');
 }
 
+function exportImage(){
+  const clone=S.cloneNode(true);
+  clone.setAttribute('xmlns','http://www.w3.org/2000/svg');
+  clone.setAttribute('xmlns:xlink','http://www.w3.org/1999/xlink');
+  clone.setAttribute('width','1000');
+  clone.setAttribute('height','1000');
+  const serialized=new XMLSerializer().serializeToString(clone);
+  const blob=new Blob([serialized],{type:'image/svg+xml;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const img=new Image();
+  img.onload=()=>{
+    const canvas=document.createElement('canvas');
+    canvas.width=1000;
+    canvas.height=1000;
+    const ctx=canvas.getContext('2d');
+    ctx.clearRect(0,0,1000,1000);
+    ctx.drawImage(img,0,0,1000,1000);
+    URL.revokeObjectURL(url);
+    canvas.toBlob(png=>{
+      if(!png)return;
+      const pngUrl=URL.createObjectURL(png);
+      const a=document.createElement('a');
+      a.href=pngUrl;
+      a.download='genesis-image.png';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(()=>URL.revokeObjectURL(pngUrl),0);
+    },'image/png');
+  };
+  img.onerror=()=>{
+    URL.revokeObjectURL(url);
+    alert('GENESIS image could not be exported.');
+  };
+  img.src=url;
+}
+
 function importConfigFile(file){
   if(!file)return;
   const reader=new FileReader();
@@ -916,6 +954,7 @@ document.addEventListener('keydown', e=>{
 
 q('generate').onclick=go;
 q('exportConfig').onclick=exportConfig;
+q('exportImage').onclick=exportImage;
 q('importConfig').onclick=()=>q('configFile').click();
 q('configFile').addEventListener('change',e=>importConfigFile(e.target.files[0]));
 q('go').onclick=()=>TRAVELLING?abortTravel():normalTravel();
@@ -957,21 +996,23 @@ q('reset').onclick=()=>{
   COMPLETE=false;
   LAST_FRAMES=[];
 
-  C.shape.value='Pentagon';
+  C.shape.value='Radial';
   C.start.value='#ffffff';
-  C.end.value='#00ffff';
-  C.colorMode.value='Gradient';
+  C.end.value='#a700bd';
+  C.colorMode.value='Alternate';
   C.center.value='.50';
   C.initial.value='50';
-  C.factor.value='1.075';
-  C.angle.value='0';
+  C.factor.value='1.1';
+  C.angle.value='33';
   C.geometryAngle.value='90';
-  C.line.value='2.50';
+  C.radialRays.value='15';
+  C.line.value='3.00';
   C.intensity.value='100';
   C.mode.value='Forward';
   C.delay.value='25';
   C.observer.value='0';
   spaceBackground.checked=false;
+  warpColors.checked=true;
 
   labels();
   buildStarfield();
