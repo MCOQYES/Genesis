@@ -1,6 +1,6 @@
 <!doctype html>
 <!--
-  GENESIS 0.5.1 — SUPERPOSITION
+  GENESIS 0.5.2 — SUPERPOSITION · STATE
   Original generative-art engine created by MCO with ASTER.
   © 2026 MASTRO Inc. All rights reserved.
 -->
@@ -8,7 +8,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>GENESIS 0.5.1 — SUPERPOSITION</title>
+<title>GENESIS 0.5.2 — SUPERPOSITION · STATE</title>
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000;color:#eee;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
@@ -64,7 +64,9 @@ button:disabled,input:disabled,select:disabled{opacity:.35}
 .presentation-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .presentation-row label{white-space:nowrap;margin-bottom:0}
 .persistence-title{margin-top:12px;font-size:10px;letter-spacing:.12em;opacity:.42}
-.superposition-title{margin-top:12px;font-size:10px;letter-spacing:.12em;opacity:.42}
+.superposition-title{margin-top:12px;font-size:11px;letter-spacing:.12em;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.superposition-title > span:first-child{opacity:.75}
+#layerCount{font-size:10px;letter-spacing:.12em;color:#ffff00;opacity:1}
 #superpositionToggle{display:flex;align-items:center;gap:8px;margin-top:9px;font-size:13px;opacity:.75}
 #superpositionToggle input{width:auto}
 .superposition-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:7px}
@@ -103,7 +105,7 @@ body.warp-mode #bridgeToggle{display:block !important}
         <polygon class="g3" points="0,-11.2 6.59,-3.46 4.26,9.06 -4.26,9.06 -6.59,-3.46" transform="rotate(14.4)"/>
       </svg>
     </div>
-    <div><h1>GENESIS 0.5.1</h1><div class="sub">SUPERPOSITION</div></div>
+    <div><h1>GENESIS 0.5.2</h1><div class="sub">SUPERPOSITION · STATE</div></div>
   </div>
 
   <div class="row"><label>Shape</label>
@@ -162,7 +164,7 @@ body.warp-mode #bridgeToggle{display:block !important}
     <label id="warpToggle"><input type="checkbox" id="warpColors" checked> Genesis colors in WARP</label>
     <label id="spaceToggle"><input type="checkbox" id="spaceBackground"> Space background</label>
   </div>
-  <div class="superposition-title">SUPERPOSITION</div>
+  <div class="superposition-title"><span>SUPERPOSITION</span><span id="layerCount" aria-live="polite">LAYERS 0</span></div>
   <label id="superpositionToggle"><input type="checkbox" id="accumulate"> Accumulate generations</label>
   <div class="superposition-actions">
     <button id="undoGeneration"><svg class="button-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 5.5h6.5A3.5 3.5 0 1 1 6 9H4.5"/><path d="M3 2.8v2.7h2.7"/></svg>UNDO</button>
@@ -179,7 +181,7 @@ body.warp-mode #bridgeToggle{display:block !important}
   <button id="reset"><svg class="button-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M13 5.5A5.5 5.5 0 1 0 14 8"/><path d="M13 2.5v3h-3"/></svg>RESET</button>
 
   <div class="hint">
-    GENESIS 0.5.1 — Superposition. Accumulate generations to compose them in the same universe. UNDO removes the last generated layer; CLEAR starts a fresh universe. Export the current generated universe as an image without the interface or decorative background. EXPORT CONFIG saves the generation state; IMPORT CONFIG restores it. Gradient preserves the normal Start→End palette; Alternate assigns Start and End to consecutive generated figures. ACCUMULATE is available for Static and Forward modes; Repeat and Breath remain temporal modes rather than persistent accumulation. GO preserves normal exploration, while ENGAGE reserves the infinite mathematical sequence for WARP. Press H for Help.
+    GENESIS 0.5.2 — Superposition. Accumulate generations to compose them in the same universe. UNDO removes the last generated layer; CLEAR starts a fresh universe. Export the current generated universe as an image without the interface or decorative background. EXPORT CONFIG saves the generation state; IMPORT CONFIG restores it. Gradient preserves the normal Start→End palette; Alternate assigns Start and End to consecutive generated figures. The layer indicator shows the number of generated layers in the current universe. ACCUMULATE is available for Static and Forward modes; Repeat and Breath remain temporal modes rather than persistent accumulation. GO preserves normal exploration, while ENGAGE reserves the infinite mathematical sequence for WARP. Press H for Help.
   </div>
   <div style="margin-top:7px;text-align:right;font-size:10px;opacity:.45"><a href="manual.html" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;letter-spacing:.08em">HELP · H</a></div>
   <div class="genesis-signature">MCO · ASTER · © 2026 MASTRO Inc.</div>
@@ -203,6 +205,8 @@ const q=id=>document.getElementById(id),
 
 let RUN=0, ACTIVE=false, COMPLETE=false, TRAVELLING=false, TRAVEL_TOKEN=0;
 let TRAVEL_MODE=null, LAST_FRAMES=[], GENERATION_HISTORY=[];
+
+function updateLayerCount(){ q('layerCount').textContent='LAYERS '+GENERATION_HISTORY.length; }
 
 /*
  * TRAVEL is deliberately logarithmic in observer space.
@@ -519,6 +523,7 @@ async function build(id,temporal,accumulate=false){
     if(temporal)await nap(+C.delay.value);
   }
   GENERATION_HISTORY.push({nodes,frames:F});
+  updateLayerCount();
   return nodes;
 }
 
@@ -532,7 +537,7 @@ async function go(){
   let accumulate=!!q('accumulate').checked&&(m==='Static'||m==='Forward');
   COMPLETE=false;
   LAST_FRAMES=[];
-  if(!accumulate)GENERATION_HISTORY=[];
+  if(!accumulate){ GENERATION_HISTORY=[]; updateLayerCount(); }
   setActive(true);
 
   try{
@@ -555,6 +560,7 @@ async function go(){
           await nap(+C.delay.value);
         }
         GENERATION_HISTORY.pop();
+        updateLayerCount();
       }
     }
   }finally{
@@ -571,6 +577,7 @@ function clearUniverse(){
   COMPLETE=false;
   LAST_FRAMES=[];
   GENERATION_HISTORY=[];
+  updateLayerCount();
   clear();
   C.observer.value='0';
   applyObserver();
@@ -582,6 +589,7 @@ function undoGeneration(){
   if(TRAVELLING||ACTIVE)return;
   const entry=GENERATION_HISTORY.pop();
   if(!entry)return;
+  updateLayerCount();
   for(const node of entry.nodes)node.remove();
   const previous=GENERATION_HISTORY[GENERATION_HISTORY.length-1];
   LAST_FRAMES=previous?previous.frames:[];
@@ -799,7 +807,7 @@ function rangeValid(id,value){
 function currentConfig(){
   return {
     schemaVersion:CONFIG_SCHEMA_VERSION,
-    genesisVersion:'0.5.1',
+    genesisVersion:'0.5.2',
     generation:{
       shape:C.shape.value,
       points:Math.round(configNumber('starPoints')),
@@ -857,6 +865,7 @@ function restoreConfig(cfg){
   COMPLETE=false;
   LAST_FRAMES=[];
   GENERATION_HISTORY=[];
+  updateLayerCount();
   C.shape.value=g.shape;
   C.start.value=g.start;
   C.end.value=g.end;
@@ -1051,6 +1060,7 @@ q('reset').onclick=()=>{
   COMPLETE=false;
   LAST_FRAMES=[];
   GENERATION_HISTORY=[];
+  updateLayerCount();
 
   C.shape.value='Radial';
   C.start.value='#ffffff';
@@ -1092,10 +1102,10 @@ C.intensity.onchange=C.intensity.oninput;
 spaceBackground.checked=false;
 spaceLayer.style.display='none';
 q('accumulate').disabled=(C.mode.value==='Repeat'||C.mode.value==='Breath');
+updateLayerCount();
 buildStarfield();
 labels();
 go();
 </script>
 </body>
 </html>
-
