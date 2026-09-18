@@ -1,6 +1,6 @@
 <!doctype html>
 <!--
-  GENESIS 0.5.2 — SUPERPOSITION · STATE
+  GENESIS 0.5.3 — SUPERPOSITION · PERSISTENCE
   Original generative-art engine created by MCO with ASTER.
   © 2026 MASTRO Inc. All rights reserved.
 -->
@@ -8,7 +8,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>GENESIS 0.5.2 — SUPERPOSITION · STATE</title>
+<title>GENESIS 0.5.3 — SUPERPOSITION · PERSISTENCE</title>
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000;color:#eee;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
@@ -105,7 +105,7 @@ body.warp-mode #bridgeToggle{display:block !important}
         <polygon class="g3" points="0,-11.2 6.59,-3.46 4.26,9.06 -4.26,9.06 -6.59,-3.46" transform="rotate(14.4)"/>
       </svg>
     </div>
-    <div><h1>GENESIS 0.5.2</h1><div class="sub">SUPERPOSITION · STATE</div></div>
+    <div><h1>GENESIS 0.5.3</h1><div class="sub">SUPERPOSITION · PERSISTENCE</div></div>
   </div>
 
   <div class="row"><label>Shape</label>
@@ -181,7 +181,7 @@ body.warp-mode #bridgeToggle{display:block !important}
   <button id="reset"><svg class="button-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M13 5.5A5.5 5.5 0 1 0 14 8"/><path d="M13 2.5v3h-3"/></svg>RESET</button>
 
   <div class="hint">
-    GENESIS 0.5.2 — Superposition. Accumulate generations to compose them in the same universe. UNDO removes the last generated layer; CLEAR starts a fresh universe. Export the current generated universe as an image without the interface or decorative background. EXPORT CONFIG saves the generation state; IMPORT CONFIG restores it. Gradient preserves the normal Start→End palette; Alternate assigns Start and End to consecutive generated figures. The layer indicator shows the number of generated layers in the current universe. ACCUMULATE is available for Static and Forward modes; Repeat and Breath remain temporal modes rather than persistent accumulation. GO preserves normal exploration, while ENGAGE reserves the infinite mathematical sequence for WARP. Press H for Help.
+    GENESIS 0.5.3 — Superposition persistence. Accumulate generations to compose them in the same universe. UNDO removes the last generated layer; CLEAR starts a fresh universe. EXPORT CONFIG saves all accumulated layers; IMPORT CONFIG rebuilds the full composition. Export the current generated universe as an image without the interface or decorative background. Gradient preserves the normal Start→End palette; Alternate assigns Start and End to consecutive generated figures. The layer indicator shows the number of generated layers in the current universe. ACCUMULATE is available for Static and Forward modes; Repeat and Breath remain temporal modes rather than persistent accumulation. WARP can discard the current superposition, so GENESIS warns before entering WARP when layers are present. GO preserves normal exploration, while ENGAGE reserves the infinite mathematical sequence for WARP. Press H for Help.
   </div>
   <div style="margin-top:7px;text-align:right;font-size:10px;opacity:.45"><a href="manual.html" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;letter-spacing:.08em">HELP · H</a></div>
   <div class="genesis-signature">MCO · ASTER · © 2026 MASTRO Inc.</div>
@@ -522,7 +522,7 @@ async function build(id,temporal,accumulate=false){
     ));
     if(temporal)await nap(+C.delay.value);
   }
-  GENERATION_HISTORY.push({nodes,frames:F});
+  GENERATION_HISTORY.push({nodes,frames:F,config:generationConfigFromControls()});
   updateLayerCount();
   return nodes;
 }
@@ -702,6 +702,15 @@ function normalTravel(){
 
 const WARP_TRANSITION_MS = 520;
 
+function engageWarp(){
+  if(!allowed())return;
+  if(GENERATION_HISTORY.length>0){
+    const ok=window.confirm('WARP may clear the current superposition. Your accumulated layers will not be recoverable from the current state.\n\nConsider EXPORT CONFIG before continuing.\n\nContinue?');
+    if(!ok)return;
+  }
+  travel();
+}
+
 function travel(){
   if(!allowed())return;
 
@@ -749,6 +758,11 @@ function travel(){
         U.removeAttribute('transform');
         U.setAttribute('opacity','1');
         W.setAttribute('opacity','1');
+        if(GENERATION_HISTORY.length){
+          GENERATION_HISTORY=[];
+          LAST_FRAMES=[];
+          updateLayerCount();
+        }
         phase='warp';
         began=now;
       }
@@ -793,7 +807,7 @@ function abortTravel(){
   }
 }
 
-const CONFIG_SCHEMA_VERSION = 1;
+const CONFIG_SCHEMA_VERSION = 2;
 const VALID_SHAPES = ['Triangle','Square','Pentagon','Hexagon','Octagon','Circle','Line','X','Cross','Parallel Vertical','Parallel Horizontal','Arc','Angle','Star','Radial'];
 const VALID_MODES = ['Static','Forward','Repeat','Breath'];
 const VALID_COLOR_MODES = ['Gradient','Alternate'];
@@ -804,26 +818,33 @@ function rangeValid(id,value){
   return Number.isFinite(n) && n>=+el.min && n<=+el.max;
 }
 
+function generationConfigFromControls(){
+  return {
+    shape:C.shape.value,
+    points:Math.round(configNumber('starPoints')),
+    radialRays:Math.round(configNumber('radialRays')),
+    start:C.start.value,
+    end:C.end.value,
+    colorMode:C.colorMode.value,
+    paletteCenter:configNumber('center'),
+    initialScale:configNumber('initial'),
+    scaleFactor:configNumber('factor'),
+    rotation:configNumber('angle'),
+    lineWidth:configNumber('line'),
+    intensity:configNumber('intensity'),
+    mode:C.mode.value,
+    delay:+C.delay.value,
+    geometryAngle:Math.round(configNumber('geometryAngle'))
+  };
+}
+
 function currentConfig(){
   return {
     schemaVersion:CONFIG_SCHEMA_VERSION,
-    genesisVersion:'0.5.2',
-    generation:{
-      shape:C.shape.value,
-      points:Math.round(configNumber('starPoints')),
-      radialRays:Math.round(configNumber('radialRays')),
-      start:C.start.value,
-      end:C.end.value,
-      colorMode:C.colorMode.value,
-      paletteCenter:configNumber('center'),
-      initialScale:configNumber('initial'),
-      scaleFactor:configNumber('factor'),
-      rotation:configNumber('angle'),
-      lineWidth:configNumber('line'),
-      intensity:configNumber('intensity'),
-      mode:C.mode.value,
-      delay:+C.delay.value,
-      geometryAngle:Math.round(configNumber('geometryAngle'))
+    genesisVersion:'0.5.3',
+    generation:generationConfigFromControls(),
+    superposition:{
+      layers:GENERATION_HISTORY.map(entry=>({generation:entry.config}))
     },
     presentation:{
       observer:configNumber('observer'),
@@ -833,39 +854,52 @@ function currentConfig(){
   };
 }
 
-function validateConfig(cfg){
-  if(!cfg || typeof cfg!=='object')throw new Error('Configuration must be an object.');
-  if(cfg.schemaVersion!==CONFIG_SCHEMA_VERSION)throw new Error('Unsupported configuration schema.');
-  if(typeof cfg.genesisVersion!=='string')throw new Error('Missing GENESIS version.');
-  const g=cfg.generation,p=cfg.presentation;
-  if(!g||!p)throw new Error('Missing generation or presentation state.');
+function validateGeneration(g){
+  if(!g||typeof g!=='object')throw new Error('Missing generation state.');
   if(!VALID_SHAPES.includes(g.shape))throw new Error('Invalid shape.');
   if(!VALID_COLOR_MODES.includes(g.colorMode))throw new Error('Invalid color mode.');
   if(!VALID_MODES.includes(g.mode))throw new Error('Invalid mode.');
-  if(!['#'].every(()=>typeof g.start==='string'&&/^#[0-9a-f]{6}$/i.test(g.start)))throw new Error('Invalid Start color.');
-  if(!/^#[0-9a-f]{6}$/i.test(g.end))throw new Error('Invalid End color.');
+  if(typeof g.start!=='string'||!/^#[0-9a-f]{6}$/i.test(g.start))throw new Error('Invalid Start color.');
+  if(typeof g.end!=='string'||!/^#[0-9a-f]{6}$/i.test(g.end))throw new Error('Invalid End color.');
   const numericRanges=[
     ['paletteCenter','center'],['initialScale','initial'],['scaleFactor','factor'],['rotation','angle'],
-    ['lineWidth','line'],['intensity','intensity'],['observer','observer'],['geometryAngle','geometryAngle']
+    ['lineWidth','line'],['intensity','intensity'],['geometryAngle','geometryAngle']
   ];
-  for(const [key,id] of numericRanges)if(!rangeValid(id,g[key]??p[key]))throw new Error(`Invalid ${key}.`);
+  for(const [key,id] of numericRanges)if(!rangeValid(id,g[key]))throw new Error(`Invalid ${key}.`);
   if(!Number.isInteger(g.points)||g.points<5||g.points>12)throw new Error('Invalid Star points.');
   if(!Number.isInteger(g.radialRays)||g.radialRays<3||g.radialRays>72)throw new Error('Invalid Radial rays.');
   if(!Number.isInteger(g.geometryAngle)||g.geometryAngle<0||g.geometryAngle>360)throw new Error('Invalid geometry angle.');
   const delays=Array.from(C.delay.options).map(o=>+o.value);
   if(!delays.includes(+g.delay))throw new Error('Invalid delay.');
-  if(typeof p.warpColors!=='boolean'||typeof p.spaceBackground!=='boolean')throw new Error('Invalid presentation state.');
 }
 
-function restoreConfig(cfg){
-  abortTravel();
-  validateConfig(cfg);
-  const g=cfg.generation,p=cfg.presentation;
-  RUN++;
-  COMPLETE=false;
-  LAST_FRAMES=[];
-  GENERATION_HISTORY=[];
-  updateLayerCount();
+function normalizeImportedConfig(cfg){
+  if(!cfg||typeof cfg!=='object')throw new Error('Configuration must be an object.');
+  if(cfg.schemaVersion===1){
+    if(!cfg.generation||!cfg.presentation)throw new Error('Missing generation or presentation state.');
+    validateGeneration(cfg.generation);
+    if(typeof cfg.presentation.warpColors!=='boolean'||typeof cfg.presentation.spaceBackground!=='boolean')throw new Error('Invalid presentation state.');
+    return {
+      schemaVersion:2,
+      genesisVersion:'0.5.3',
+      superposition:{layers:[{generation:cfg.generation}]},
+      presentation:cfg.presentation
+    };
+  }
+  if(cfg.schemaVersion!==CONFIG_SCHEMA_VERSION)throw new Error('Unsupported configuration schema.');
+  if(typeof cfg.genesisVersion!=='string')throw new Error('Missing GENESIS version.');
+  if(!cfg.superposition||!Array.isArray(cfg.superposition.layers))throw new Error('Missing superposition layers.');
+  if(!cfg.presentation)throw new Error('Missing presentation state.');
+  if(!Number.isFinite(Number(cfg.presentation.observer))||!rangeValid('observer',cfg.presentation.observer))throw new Error('Invalid observer state.');
+  if(typeof cfg.presentation.warpColors!=='boolean'||typeof cfg.presentation.spaceBackground!=='boolean')throw new Error('Invalid presentation state.');
+  for(const layer of cfg.superposition.layers){
+    if(!layer||typeof layer!=='object')throw new Error('Invalid layer.');
+    validateGeneration(layer.generation);
+  }
+  return cfg;
+}
+
+function setGenerationControls(g){
   C.shape.value=g.shape;
   C.start.value=g.start;
   C.end.value=g.end;
@@ -878,18 +912,54 @@ function restoreConfig(cfg){
   C.intensity.value=g.intensity;
   C.mode.value=g.mode;
   C.delay.value=String(g.delay);
-  C.observer.value=p.observer;
   C.geometryAngle.value=g.geometryAngle;
   C.starPoints.value=g.points;
   C.radialRays.value=g.radialRays;
-  warpColors.checked=p.warpColors;
-  spaceBackground.checked=p.spaceBackground;
-  setBridgeHidden(false);
+}
+
+async function restoreConfig(cfg){
+  abortTravel();
+  const normalized=normalizeImportedConfig(cfg);
+  const p=normalized.presentation;
+  RUN++;
+  const id=RUN;
+  ACTIVE=false;
+  COMPLETE=false;
+  LAST_FRAMES=[];
+  GENERATION_HISTORY=[];
+  updateLayerCount();
   clearWarp();
   U.setAttribute('opacity','1');
+  setBridgeHidden(false);
+  warpColors.checked=p.warpColors;
+  spaceBackground.checked=p.spaceBackground;
+  C.observer.value=p.observer;
   labels();
   buildStarfield();
-  go();
+  setActive(true);
+
+  const layers=normalized.superposition.layers;
+  try{
+    for(const layer of layers){
+      if(id!==RUN)throw new Error('Import was cancelled.');
+      setGenerationControls(layer.generation);
+      labels();
+      C.observer.value='0';
+      applyObserver();
+      const nodes=await build(id,false,true);
+      if(!nodes)throw new Error('Configuration could not be reconstructed.');
+    }
+
+    const finalGeneration=normalized.generation|| (layers.length?layers[layers.length-1].generation:null);
+    if(finalGeneration)setGenerationControls(finalGeneration);
+    C.observer.value=p.observer;
+    labels();
+    applyObserver();
+    COMPLETE=GENERATION_HISTORY.length>0;
+  }finally{
+    setActive(false);
+    observerState();
+  }
 }
 
 function downloadText(filename,text,type){
@@ -1020,7 +1090,7 @@ q('exportImage').onclick=exportImage;
 q('importConfig').onclick=()=>q('configFile').click();
 q('configFile').addEventListener('change',e=>importConfigFile(e.target.files[0]));
 q('go').onclick=()=>TRAVELLING?abortTravel():normalTravel();
-q('engage').onclick=()=>TRAVELLING?abortTravel():travel();
+q('engage').onclick=()=>TRAVELLING?abortTravel():engageWarp();
 q('stop').onclick=()=>{
   if(TRAVELLING){
     abortTravel();

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GENESIS 0.5.2 — Manual</title>
+<title>GENESIS 0.5.3 — Manual</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#070707;color:#eee;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
@@ -24,8 +24,8 @@ footer{margin-top:22px;font-size:10px;opacity:.4}
 </head>
 <body>
 <main>
-  <h1>GENESIS 0.5.2</h1>
-  <div class="sub">SUPERPOSITION · QUICK MANUAL</div>
+  <h1>GENESIS 0.5.3</h1>
+  <div class="sub">SUPERPOSITION · PERSISTENCE · QUICK MANUAL</div>
 
   <div class="box">
     <b>What is Genesis?</b><br>
@@ -74,16 +74,12 @@ footer{margin-top:22px;font-size:10px;opacity:.4}
     <b>ACCUMULATE</b> lets a new generation coexist with the current universe instead of clearing it first. It is available for <b>Static</b> and <b>Forward</b> modes.<br><br>
     <b>UNDO</b> removes the most recent generated layer. <b>CLEAR</b> removes the accumulated universe and starts fresh without changing the current parameter values.
     <br><br>
-    Each accumulated generation is treated as one event. The first 0.5.2 implementation deliberately keeps the existing renderer and configuration model intact; configuration files continue to represent the generation settings, not the transient accumulated history.
+    Each accumulated generation is treated as one event. Each accumulated generation is treated as one event. 0.5.3 extends persistence so a configuration can represent the complete superposition, layer by layer, while keeping the existing renderer and interaction model intact.
   </div>
 
   <h2>PERSISTENCE</h2>
   <div class="box">
-    <b>EXPORT CONFIG</b> saves the current GENESIS state as <b>genesis-config.json</b>. The file contains the parameters required to reconstruct the universe plus lightweight presentation state.<br><br><b>EXPORT IMAGE</b> saves the generated universe as a transparent <b>PNG image</b>. The interface and decorative Space background are not included.
-    <br><br>
-    <b>IMPORT CONFIG</b> restores a previously exported configuration, refreshes the controls and regenerates the universe. Invalid or incompatible configuration files are rejected without replacing the current state.
-    <br><br>
-    <b>Ctrl+S</b> (Windows/Linux) or <b>Cmd+S</b> (macOS) exports the current configuration directly.
+    <b>EXPORT CONFIG</b> saves the current GENESIS state as <b>genesis-config.json</b>. In 0.5.3 the file can contain the complete superposition: each accumulated layer keeps the generation parameters that created it, in order, plus the current presentation state.<br><br><b>IMPORT CONFIG</b> rebuilds the saved layers in order and restores the composition. A configuration from 0.4 is also accepted as a single-layer configuration.<br><br><b>EXPORT IMAGE</b> saves the generated universe as a transparent <b>PNG image</b>. The interface and decorative Space background are not included.<br><br><b>Ctrl+S</b> (Windows/Linux) or <b>Cmd+S</b> (macOS) exports the current configuration directly.
   </div>
 
   <h2>GENERATE · BEHAVIOUR</h2>
@@ -110,6 +106,8 @@ footer{margin-top:22px;font-size:10px;opacity:.4}
     When WARP begins, the Bridge disappears so the universe fills the screen. Press <span class="kbd">G</span> or the floating <b>G</b> button to bring the Bridge back; press <span class="kbd">G</span> again to hide it.
     <br><br>
     <b>Genesis colors in WARP</b> is optional. OFF gives a clean monochrome WARP; ON alternates white with the selected arrival colour.
+    <br><br>
+    If accumulated layers exist, ENGAGE warns before entering WARP because the current superposition may be discarded. EXPORT CONFIG first if the composition matters.
   </div>
 
   <h2>SPACE · BACKGROUND</h2>
@@ -128,7 +126,7 @@ footer{margin-top:22px;font-size:10px;opacity:.4}
   <h2>RESET</h2>
   <p><b>RESET</b> restores the default Genesis configuration and generates it again.</p>
 
-  <footer>GENESIS 0.5.2 · SUPERPOSITION · © 2026 MASTRO Inc. · MCO with ASTER</footer>
+  <footer>GENESIS 0.5.3 · SUPERPOSITION · PERSISTENCE · © 2026 MASTRO Inc. · MCO with ASTER</footer>
 </main>
 </body>
 </html>
