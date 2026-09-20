@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GENESIS 0.5.3 — Manual</title>
+<title>GENESIS 0.5 — Manual</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#070707;color:#eee;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
@@ -24,8 +24,8 @@ footer{margin-top:22px;font-size:10px;opacity:.4}
 </head>
 <body>
 <main>
-  <h1>GENESIS 0.5.3</h1>
-  <div class="sub">SUPERPOSITION · PERSISTENCE · QUICK MANUAL</div>
+  <h1>GENESIS 0.5</h1>
+  <div class="sub">SUPERPOSITION · QUICK MANUAL</div>
 
   <div class="box">
     <b>What is Genesis?</b><br>
@@ -63,8 +63,8 @@ footer{margin-top:22px;font-size:10px;opacity:.4}
     <tr><th>Control</th><th>Range / default</th><th>Meaning</th></tr>
     <tr><td><b>Initial Scale</b></td><td>0.1–100 · 50.0</td><td>Size of the first generated figure.</td></tr>
     <tr><td><b>Scale Factor</b></td><td>1.001–1.500 · 1.100</td><td>Controls how much each successive figure grows. Higher values create fewer, more widely separated generations.</td></tr>
-    <tr><td><b>Rotation</b></td><td>0–180° · 33°</td><td>Progressively rotates successive generations.</td></tr>
-    <tr><td><b>Line Width</b></td><td>0.05–10.00 · 3.00</td><td>Controls the thickness of the rendered geometry. Large values can become a structural visual element of the composition.</td></tr>
+    <tr><td><b>Rotation</b></td><td>0–180° · 3°</td><td>Progressively rotates successive generations.</td></tr>
+    <tr><td><b>Line Width</b></td><td>0.05–10.00 · 4.00</td><td>Controls the thickness of the rendered geometry. Large values can become a structural visual element of the composition.</td></tr>
     <tr><td><b>Intensity</b></td><td>25–200% · 100%</td><td>Changes perceived colour strength without changing the geometry.</td></tr>
   </table>
 
@@ -74,12 +74,12 @@ footer{margin-top:22px;font-size:10px;opacity:.4}
     <b>ACCUMULATE</b> lets a new generation coexist with the current universe instead of clearing it first. It is available for <b>Static</b> and <b>Forward</b> modes.<br><br>
     <b>UNDO</b> removes the most recent generated layer. <b>CLEAR</b> removes the accumulated universe and starts fresh without changing the current parameter values.
     <br><br>
-    Each accumulated generation is treated as one event. Each accumulated generation is treated as one event. 0.5.3 extends persistence so a configuration can represent the complete superposition, layer by layer, while keeping the existing renderer and interaction model intact.
+    Each accumulated generation is treated as one event. 0.5 extends GENESIS so multiple generations can coexist in the same universe while keeping the existing renderer and interaction model intact.
   </div>
 
   <h2>PERSISTENCE</h2>
   <div class="box">
-    <b>EXPORT CONFIG</b> saves the current GENESIS state as <b>genesis-config.json</b>. In 0.5.3 the file can contain the complete superposition: each accumulated layer keeps the generation parameters that created it, in order, plus the current presentation state.<br><br><b>IMPORT CONFIG</b> rebuilds the saved layers in order and restores the composition. A configuration from 0.4 is also accepted as a single-layer configuration.<br><br><b>EXPORT IMAGE</b> saves the generated universe as a transparent <b>PNG image</b>. The interface and decorative Space background are not included.<br><br><b>Ctrl+S</b> (Windows/Linux) or <b>Cmd+S</b> (macOS) exports the current configuration directly.
+    <b>EXPORT CONFIG</b> saves the current GENESIS state as <b>genesis-config.json</b>. In 0.5 the file can contain the complete superposition: each accumulated layer keeps the generation parameters that created it, in order, plus the current presentation state.<br><br><b>IMPORT CONFIG</b> rebuilds the saved layers in order and restores the composition. A configuration from 0.4 is also accepted as a single-layer configuration.<br><br><b>EXPORT IMAGE</b> saves the generated universe as a transparent <b>PNG image</b>. The interface and decorative Space background are not included.<br><br><b>Ctrl+S</b> (Windows/Linux) or <b>Cmd+S</b> (macOS) exports the current configuration directly.
   </div>
 
   <h2>GENERATE · BEHAVIOUR</h2>
@@ -126,7 +126,7 @@ footer{margin-top:22px;font-size:10px;opacity:.4}
   <h2>RESET</h2>
   <p><b>RESET</b> restores the default Genesis configuration and generates it again.</p>
 
-  <footer>GENESIS 0.5.3 · SUPERPOSITION · PERSISTENCE · © 2026 MASTRO Inc. · MCO with ASTER</footer>
+  <footer>GENESIS 0.5 · SUPERPOSITION · © 2026 MASTRO Inc. · MCO with ASTER</footer>
 </main>
 </body>
 </html>
