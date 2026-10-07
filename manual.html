@@ -3,130 +3,75 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GENESIS 0.5 — Manual</title>
+<title>GENESIS 0.6 — YOUR OWN SHAPES · Manual</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#070707;color:#eee;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-main{max-width:760px;margin:auto;padding:28px 30px}
-h1{margin:0;font-size:25px;letter-spacing:.12em}
-.sub{font-size:11px;letter-spacing:.15em;opacity:.5;margin:3px 0 20px}
-h2{font-size:13px;letter-spacing:.1em;margin:18px 0 6px}
-p,li{font-size:13px;line-height:1.45}
-ul{margin:5px 0;padding-left:20px}
-.box{border:1px solid #333;border-radius:9px;padding:11px 13px;margin-top:9px;background:#101010}
-.warp{border-color:#465b78}
-.kbd{font:12px ui-monospace,Consolas,monospace;border:1px solid #444;border-radius:4px;padding:1px 5px;background:#151515}
-table{width:100%;border-collapse:collapse;margin-top:8px;font-size:12px}
-th,td{text-align:left;padding:7px 8px;border-bottom:1px solid #2b2b2b;vertical-align:top}
-th{opacity:.7;font-weight:500}
-footer{margin-top:22px;font-size:10px;opacity:.4}
+*{box-sizing:border-box}body{margin:0;background:#070707;color:#eee;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}main{max-width:780px;margin:auto;padding:28px 30px}h1{margin:0;font-size:25px;letter-spacing:.12em}.sub{font-size:11px;letter-spacing:.15em;opacity:.5;margin:3px 0 20px}h2{font-size:13px;letter-spacing:.1em;margin:18px 0 6px}p,li{font-size:13px;line-height:1.45}ul{margin:5px 0;padding-left:20px}.box{border:1px solid #333;border-radius:9px;padding:11px 13px;margin-top:9px;background:#101010}.warp{border-color:#465b78}.primitive{border-color:#4d4268}.kbd{font:12px ui-monospace,Consolas,monospace;border:1px solid #444;border-radius:4px;padding:1px 5px;background:#151515}table{width:100%;border-collapse:collapse;margin-top:8px;font-size:12px}th,td{text-align:left;padding:7px 8px;border-bottom:1px solid #2b2b2b;vertical-align:top}th{opacity:.7;font-weight:500}code{font:12px ui-monospace,Consolas,monospace;background:#151515;border-radius:4px;padding:1px 4px}footer{margin-top:22px;font-size:10px;opacity:.4}
 </style>
 </head>
 <body>
 <main>
-  <h1>GENESIS 0.5</h1>
-  <div class="sub">SUPERPOSITION · QUICK MANUAL</div>
+<h1>GENESIS 0.6</h1>
+<div class="sub">YOUR OWN SHAPES · QUICK MANUAL</div>
+<div class="box"><b>What is Genesis 0.6?</b><br>Genesis 0.6 is the branch in which the generator crosses from using only predefined geometry to working with <b>user-defined primordial geometry</b>. You can create, refine, precisely place, curve and move your own Primitive, then keep it available for future sessions.</div>
 
-  <div class="box">
-    <b>What is Genesis?</b><br>
-    Genesis creates a universe from a sequence of generated geometric figures. You choose the geometry, growth, rotation and colour behaviour, explore the resulting universe, and — if you dare — ENGAGE WARP to travel beyond its primordial boundary into an infinite mathematical continuation.
-  </div>
+<h2>OWNERSHIP · IDENTITY</h2>
+<div class="box"><b>GENESIS</b> is an original generative-art engine created by <b>MCO with ASTER</b>. The software, original architecture, implementation and visual language are proprietary to <b>MASTRO Inc.</b><br><br><b>© 2026 MASTRO Inc. All rights reserved.</b><br><br>The small symbol used in the interface is the <b>GENESIS Mark</b>: a visual identity derived from the project's own generative vocabulary.</div>
 
+<h2>PRIMITIVE MODEL · FOUNDATION</h2>
+<div class="box primitive">A <b>Primitive</b> is one or more ordered 2D paths in canonical space <code>[-1,+1] × [-1,+1]</code>. Each path may be open or closed and may contain straight <b>LINE</b> segments or simple <b>ARC</b> segments.</div>
+<ul><li><b>Canonical space</b> — normalized 2D coordinates, centered on <code>(0,0)</code>.</li><li><b>Canonical scale</b> — the Primitive definition is independent of screen pixels, viewport size and output resolution.</li><li><b>Multiple paths</b> — a Primitive can contain more than one independent path.</li><li><b>LINE + ARC</b> — mixed segment types are supported in the same Primitive.</li></ul>
 
-  <h2>OWNERSHIP · IDENTITY</h2>
-  <div class="box">
-    <b>GENESIS</b> is an original generative-art engine created by <b>MCO with ASTER</b>. The software, original architecture, implementation and visual language are proprietary to <b>MASTRO Inc.</b>
-    <br><br>
-    <b>© 2026 MASTRO Inc. All rights reserved.</b> No license to reproduce, modify, distribute or commercially exploit the source code is granted by this notice.
-    <br><br>
-    The small symbol used in the interface is the <b>GENESIS Mark</b>: a visual identity derived from the project's own generative vocabulary.
-  </div>
+<h2>0.6 · THE EVOLUTION</h2>
+<table><tr><th>Release</th><th>Capability</th></tr>
+<tr><td><b>0.6.1 · Primitive Foundation</b></td><td>Introduces the Primitive model and validation Primitives: Trapezoid and Parallelogram.</td></tr>
+<tr><td><b>0.6.2 · Primitive Editor</b></td><td>Create one or more user-defined paths directly in Genesis.</td></tr>
+<tr><td><b>0.6.3 · Editor Refinement</b></td><td>Discrete placement grid, arbitrary path removal and Undo/Ctrl-Z.</td></tr>
+<tr><td><b>0.6.4 · Precision Editor</b></td><td>Rulers, coordinate display and cursor crosshair improve precise placement.</td></tr>
+<tr><td><b>0.6.4.1 · Point Targeting</b></td><td>Existing points have generous hit targets and exact snapping for comfortable connections.</td></tr>
+<tr><td><b>0.6.5 · Curves / Arcs</b></td><td>Simple ARC geometry using <b>CENTER → START → END</b>, while keeping LINE as the basic straight segment.</td></tr>
+<tr><td><b>0.6.6 · MOVE</b></td><td>Drag a complete path to reposition it while preserving its internal geometry.</td></tr>
+<tr><td><b>0.6.7 · Persistence</b></td><td>Custom Primitives persist locally and are preserved by configuration export/import.</td></tr></table>
 
-  <h2>CREATE · SHAPES</h2>
-  <ul>
-    <li><b>Shape</b> — Triangle, Square, Pentagon, Hexagon, Octagon, Circle, Line, X, Cross, Parallel Vertical, Parallel Horizontal, Arc, Angle, Star or Radial.</li>
-    <li><b>Angle</b> — available only for Arc and Angle. Controls the geometry angle from 0° to 360°.</li>
-    <li><b>Points</b> — available only for Star. Controls the number of star points from 5 to 12.</li>
-    <li><b>Rays</b> — available only for Radial. Controls the number of rays from 3 to 72.</li>
-  </ul>
+<h2>CREATE · PRIMITIVE EDITOR</h2>
+<ul><li><b>CREATE PRIMITIVE</b> opens the editor.</li><li><b>LINE</b> creates straight segments by placing points.</li><li><b>ARC</b> creates an arc with three clicks: <b>CENTER → START → END</b>. The END click defines the final angle; Genesis keeps the arc on the radius established by START.</li><li><b>NEW PATH</b> begins an independent path inside the same Primitive.</li><li><b>CLOSE PATH</b> closes the current path with a final straight connection.</li><li><b>Undo / Ctrl-Z</b> removes the most recent point/segment while editing.</li><li><b>Remove Path</b> removes the selected path.</li><li><b>USE PRIMITIVE</b> registers the edited geometry as <b>Custom</b>.</li></ul>
 
-  <h2>CREATE · COLOUR</h2>
-  <ul>
-    <li><b>Start / End</b> — choose the beginning and ending colours.</li>
-    <li><b>Color Mode · Gradient</b> — the normal Genesis colour progression from Start to End across the generated figures.</li>
-    <li><b>Color Mode · Alternate</b> — consecutive generated figures alternate between Start and End instead of using the gradient.</li>
-    <li><b>Palette Center</b> — controls the visual centre of the Gradient transition. It has no visual effect in Alternate mode.</li>
-  </ul>
+<h2>PRECISION · TARGETING</h2>
+<div class="box">The editor uses the canonical coordinate system <code>[-1,+1] × [-1,+1]</code>. Rulers, live X/Y coordinates, grid placement and point targets are visual aids only; they do not change the Primitive model.</div>
 
-  <h2>CREATE · GROWTH & GEOMETRY</h2>
-  <table>
-    <tr><th>Control</th><th>Range / default</th><th>Meaning</th></tr>
-    <tr><td><b>Initial Scale</b></td><td>0.1–100 · 50.0</td><td>Size of the first generated figure.</td></tr>
-    <tr><td><b>Scale Factor</b></td><td>1.001–1.500 · 1.100</td><td>Controls how much each successive figure grows. Higher values create fewer, more widely separated generations.</td></tr>
-    <tr><td><b>Rotation</b></td><td>0–180° · 3°</td><td>Progressively rotates successive generations.</td></tr>
-    <tr><td><b>Line Width</b></td><td>0.05–10.00 · 4.00</td><td>Controls the thickness of the rendered geometry. Large values can become a structural visual element of the composition.</td></tr>
-    <tr><td><b>Intensity</b></td><td>25–200% · 100%</td><td>Changes perceived colour strength without changing the geometry.</td></tr>
-  </table>
+<h2>MOVE · PATH</h2>
+<div class="box">Select a path and drag its line to move the whole path. Genesis keeps the path inside the canonical bounds and preserves its geometry. Point dragging remains available when you want to edit individual points instead.</div>
 
+<h2>PRIMITIVE → GENERATION</h2>
+<table><tr><th>Control</th><th>Meaning</th></tr><tr><td><b>Primitive</b></td><td>The primordial geometry Genesis uses as the source of generation.</td></tr><tr><td><b>Initial Scale</b></td><td>The size at which the Primitive enters the generation engine.</td></tr><tr><td><b>Scale Factor</b></td><td>Controls how successive generated figures grow.</td></tr><tr><td><b>Rotation</b></td><td>Progressively rotates successive generations.</td></tr><tr><td><b>Line Width</b></td><td>Controls the thickness of the rendered geometry.</td></tr><tr><td><b>Intensity</b></td><td>Changes perceived colour strength without changing the geometry.</td></tr></table>
 
-  <h2>SUPERPOSITION</h2>
-  <div class="box">
-    <b>ACCUMULATE</b> lets a new generation coexist with the current universe instead of clearing it first. It is available for <b>Static</b> and <b>Forward</b> modes.<br><br>
-    <b>UNDO</b> removes the most recent generated layer. <b>CLEAR</b> removes the accumulated universe and starts fresh without changing the current parameter values.
-    <br><br>
-    Each accumulated generation is treated as one event. 0.5 extends GENESIS so multiple generations can coexist in the same universe while keeping the existing renderer and interaction model intact.
-  </div>
+<h2>COLOUR</h2>
+<ul><li><b>Start / End</b> — beginning and ending colours.</li><li><b>Gradient</b> — continuous colour progression across generated figures.</li><li><b>Alternate</b> — alternates between Start and End.</li><li><b>Palette Center</b> — controls the visual centre of the Gradient transition.</li></ul>
 
-  <h2>PERSISTENCE</h2>
-  <div class="box">
-    <b>EXPORT CONFIG</b> saves the current GENESIS state as <b>genesis-config.json</b>. In 0.5 the file can contain the complete superposition: each accumulated layer keeps the generation parameters that created it, in order, plus the current presentation state.<br><br><b>IMPORT CONFIG</b> rebuilds the saved layers in order and restores the composition. A configuration from 0.4 is also accepted as a single-layer configuration.<br><br><b>EXPORT IMAGE</b> saves the generated universe as a transparent <b>PNG image</b>. The interface and decorative Space background are not included.<br><br><b>Ctrl+S</b> (Windows/Linux) or <b>Cmd+S</b> (macOS) exports the current configuration directly.
-  </div>
+<h2>SUPERPOSITION</h2>
+<div class="box"><b>ACCUMULATE</b> lets a new generation coexist with the current universe. <b>LAYERS</b> shows accumulated generations. <b>UNDO</b> removes the most recent layer. <b>CLEAR</b> removes the accumulated universe without changing current parameter values.</div>
 
-  <h2>GENERATE · BEHAVIOUR</h2>
-  <ul>
-    <li><b>Mode</b> — Static, Forward, Repeat or Breath.</li>
-    <li><b>Delay</b> — controls the time between generated figures in animated modes.</li>
-    <li><b>GENERATE</b> — builds the universe from the current settings.</li>
-  </ul>
+<h2>PERSISTENCE · 0.6.7</h2>
+<div class="box"><b>Custom Primitive</b> is persisted locally in the browser after it is used. Reopening Genesis can recover the saved Custom geometry.<br><br><b>EXPORT CONFIG</b> saves the complete current configuration, including the Custom Primitive and superposition layers.<br><br><b>IMPORT CONFIG</b> restores the saved configuration and its Custom Primitive.<br><br>Genesis deliberately does <b>not</b> add a separate Shape Library or extra save/load buttons. Persistence belongs to the existing configuration workflow.</div>
 
-  <h2>EXPLORE · OBSERVER</h2>
-  <div class="box">
-    <b>NEAR ↔ FAR</b><br>
-    The Observer slider changes your view through the completed generated universe. Use it to inspect the geometry before travelling.
-  </div>
+<h2>GENERATE · BEHAVIOUR</h2>
+<ul><li><b>Mode</b> — Static, Forward, Repeat or Breath.</li><li><b>Delay</b> — controls timing between generated figures in animated modes.</li><li><b>GENERATE</b> — builds the universe from current settings.</li></ul>
 
-  <h2>TRAVEL · GO vs ENGAGE</h2>
-  <ul>
-    <li><b>GO</b> — travel normally toward the deepest, primordial part of the generated universe. <b>STOP</b> lets you interrupt travel and inspect it.</li>
-    <li><b>ENGAGE</b> — enter <b>WARP</b>. The primordial point becomes a landmark rather than a final destination, and the journey continues into the infinite mathematical sequence.</li>
-  </ul>
+<h2>EXPLORE · OBSERVER</h2><div class="box"><b>NEAR ↔ FAR</b> changes your view through the completed generated universe.</div>
 
-  <div class="box warp">
-    <b>WARP EXPERIENCE</b><br>
-    When WARP begins, the Bridge disappears so the universe fills the screen. Press <span class="kbd">G</span> or the floating <b>G</b> button to bring the Bridge back; press <span class="kbd">G</span> again to hide it.
-    <br><br>
-    <b>Genesis colors in WARP</b> is optional. OFF gives a clean monochrome WARP; ON alternates white with the selected arrival colour.
-    <br><br>
-    If accumulated layers exist, ENGAGE warns before entering WARP because the current superposition may be discarded. EXPORT CONFIG first if the composition matters.
-  </div>
+<h2>TRAVEL · GO vs ENGAGE</h2>
+<ul><li><b>GO</b> — travel normally toward the deepest, primordial part of the generated universe.</li><li><b>ENGAGE</b> — enter <b>WARP</b> and continue into the infinite mathematical sequence.</li></ul>
+<div class="box warp"><b>WARP EXPERIENCE</b><br>When WARP begins, the Bridge disappears so the universe fills the screen. Press <span class="kbd">G</span> to bring it back. If accumulated layers exist, ENGAGE warns before entering WARP because the current superposition may be discarded.</div>
 
-  <h2>SPACE · BACKGROUND</h2>
-  <ul>
-    <li><b>Space background</b> — displays the bundled <b>space-background.jpg</b> as a fixed visual layer behind the generated universe.</li>
-    <li>The background is <b>OFF by default</b>. It does not participate in the geometry or generation logic.</li>
-  </ul>
+<h2>SPACE · BACKGROUND</h2>
+<ul><li><b>Space background</b> displays the bundled <b>space-background.jpg</b> behind the generated universe.</li><li>The background is decorative and does not participate in geometry or generation logic.</li></ul>
 
-  <h2>HELP & SHORTCUTS</h2>
-  <div class="box">
-    <b><span class="kbd">Ctrl/Cmd+S</span></b> — export the current configuration as <b>genesis-config.json</b>.<br>
-    <b><span class="kbd">H</span></b> — open this manual in a new tab.<br>
-    <b><span class="kbd">G</span></b> — show or hide the Bridge controls; in WARP, the first press restores the Bridge.
-  </div>
+<h2>HELP & SHORTCUTS</h2>
+<div class="box"><b><span class="kbd">Ctrl/Cmd+S</span></b> — export the current configuration.<br><b><span class="kbd">Ctrl/Cmd+Z</span></b> — undo the last generation; in the Primitive Editor, undo the last point.<br><b><span class="kbd">H</span></b> — open this manual.<br><b><span class="kbd">G</span></b> — show/hide the Bridge controls; in WARP, the first press restores the Bridge.</div>
 
-  <h2>RESET</h2>
-  <p><b>RESET</b> restores the default Genesis configuration and generates it again.</p>
+<h2>RESET</h2><p><b>RESET</b> restores the agreed Genesis 0.6 welcome configuration: the <b>Genesis G</b> Custom Primitive, its initial visual settings and the Space background.</p>
 
-  <footer>GENESIS 0.5 · SUPERPOSITION · © 2026 MASTRO Inc. · MCO with ASTER</footer>
-</main>
-</body>
-</html>
+<div class="box"><b>The 0.6 idea</b><br>Genesis 0.6 is not a new editor. It is the moment in which Genesis can work with <b>your own shapes</b>.</div>
+
+<!-- ASTER EASTER EGG · 0.6 — A shape emerges from the dark. It grows. It becomes recognizable. It becomes Genesis. -->
+<footer>GENESIS 0.6 · YOUR OWN SHAPES · © 2026 MASTRO Inc. · MCO with ASTER</footer>
+</main></body></html>
