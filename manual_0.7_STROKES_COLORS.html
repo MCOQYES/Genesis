@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GENESIS 0.7 — STROKES &amp; COLORS · Manual</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#070707;color:#eee;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}main{max-width:780px;margin:auto;padding:28px 30px}h1{margin:0;font-size:25px;letter-spacing:.12em}.sub{font-size:11px;letter-spacing:.15em;opacity:.5;margin:3px 0 20px}h2{font-size:13px;letter-spacing:.1em;margin:18px 0 6px}p,li{font-size:13px;line-height:1.45}ul{margin:5px 0;padding-left:20px}.box{border:1px solid #333;border-radius:9px;padding:11px 13px;margin-top:9px;background:#101010}.warp{border-color:#465b78}.color{border-color:#4d4268}.stroke{border-color:#465b78}.kbd{font:12px ui-monospace,Consolas,monospace;border:1px solid #444;border-radius:4px;padding:1px 5px;background:#151515}table{width:100%;border-collapse:collapse;margin-top:8px;font-size:12px}th,td{text-align:left;padding:7px 8px;border-bottom:1px solid #2b2b2b;vertical-align:top}th{opacity:.7;font-weight:500}code{font:12px ui-monospace,Consolas,monospace;background:#151515;border-radius:4px;padding:1px 4px}footer{margin-top:22px;font-size:10px;opacity:.4}
+</style>
+</head>
+<body><main>
+<h1>GENESIS 0.7</h1>
+<div class="sub">STROKES &amp; COLORS · QUICK MANUAL</div>
+<div class="box"><b>What is Genesis 0.7?</b><br>Genesis 0.7 extends the generator with a visual language for <b>how geometry is drawn</b> and <b>how generations are coloured</b>. Strokes remain independent from geometry, while colour modes determine the colour assigned to each generated figure. The goal is more visual expression without turning Genesis into a general-purpose graphics editor.</div>
+
+<h2>0.7 · THE EVOLUTION</h2>
+<table><tr><th>Release</th><th>Capability</th></tr>
+<tr><td><b>0.7.1 · STROKES</b></td><td>Solid, Dashed and Dotted strokes, with optional Proportional behaviour for dashed and dotted patterns.</td></tr>
+<tr><td><b>0.7.2 · COLORS</b></td><td>Three Colors mode adds a controlled middle colour while preserving Gradient and Alternate.</td></tr>
+<tr><td><b>0.7.3 · MONOCHROME</b></td><td>Single-colour generation, optionally progressing from white toward the selected colour.</td></tr>
+<tr><td><b>0.7.4 · SPECTRUM</b></td><td>Continuous traversal of the visible colour spectrum, repeating through the generated universe.</td></tr>
+</table>
+
+<h2>STROKES · 0.7.1</h2>
+<div class="box stroke"><b>Stroke</b> controls only the way generated geometry is rendered. It does not modify the Primitive or the generation geometry.</div>
+<ul><li><b>Solid</b> — continuous line.</li><li><b>Dashed</b> — repeated dash pattern.</li><li><b>Dotted</b> — repeated dot pattern.</li><li><b>Proportional</b> — available for Dashed and Dotted. When enabled, the pattern grows with the Genesis generation rather than remaining fixed.</li></ul>
+
+<h2>COLORS · 0.7.2</h2>
+<ul><li><b>Gradient</b> — continuous progression from Start to End.</li><li><b>Alternate</b> — consecutive generations alternate between Start and End.</li><li><b>Three Colors</b> — uses Start, Middle and End. Middle occupies a narrow visual band centred on Palette Center; the rest of the progression remains continuous.</li><li><b>Palette Center</b> — controls the visual centre of Gradient and Three Colors.</li></ul>
+
+<h2>MONOCHROME · 0.7.3</h2>
+<div class="box color"><b>Color</b> selects one colour for the whole generation.</div>
+<ul><li><b>Progressive OFF</b> — every generated figure uses the selected colour.</li><li><b>Progressive ON</b> — the generation progresses from white toward the selected colour.</li></ul>
+
+<h2>SPECTRUM · 0.7.4</h2>
+<div class="box color"><b>Spectrum</b> traverses the full visible colour spectrum continuously, beginning at red and passing through the primary and intermediate spectral colours before returning to red. The first visible cycle is deliberately extended beyond the strict fit field so it reads as a complete rainbow; subsequent generations repeat the cycle as you move through the generated universe.</div>
+<p>Spectrum has no additional colour controls. The spectrum is a property of the generation itself, not a user-selected palette.</p>
+
+<h2>GENERATION · STROKE + COLOUR</h2>
+<table><tr><th>Layer</th><th>Meaning</th></tr>
+<tr><td><b>Primitive</b></td><td>The source geometry. Strokes and colours do not alter it.</td></tr>
+<tr><td><b>Generation</b></td><td>Creates successive figures using Initial Scale, Scale Factor and Rotation.</td></tr>
+<tr><td><b>Stroke</b></td><td>Determines how each generated figure is drawn.</td></tr>
+<tr><td><b>Colour</b></td><td>Determines the colour assigned to each generated figure.</td></tr>
+</table>
+
+<h2>SUPERPOSITION</h2>
+<div class="box"><b>ACCUMULATE</b> lets a new generation coexist with the current universe. <b>LAYERS</b> shows accumulated generations. <b>UNDO</b> removes the most recent layer. <b>CLEAR</b> removes the accumulated universe without changing current parameter values.</div>
+
+<h2>PERSISTENCE · CONFIG</h2>
+<div class="box"><b>EXPORT CONFIG</b> saves the current Genesis configuration. <b>IMPORT CONFIG</b> restores a previously exported configuration and regenerates the universe. Custom Primitives and supported presentation state remain part of the configuration workflow.</div>
+
+<h2>CREATE · YOUR OWN SHAPES</h2>
+<p>Genesis 0.7 retains the complete 0.6 Primitive workflow: canonical space <code>[-1,+1] × [-1,+1]</code>, LINE and ARC segments, precision targeting, MOVE, and local persistence of Custom Primitives.</p>
+
+<h2>EXPLORE · OBSERVER</h2>
+<div class="box"><b>NEAR ↔ FAR</b> changes your view through the completed generated universe.</div>
+
+<h2>TRAVEL · GO vs ENGAGE</h2>
+<ul><li><b>GO</b> — travel normally toward the deepest, primordial part of the generated universe.</li><li><b>ENGAGE</b> — enter <b>WARP</b> and continue into the infinite mathematical sequence.</li></ul>
+<div class="box warp"><b>WARP EXPERIENCE</b><br>When WARP begins, the Bridge disappears so the universe fills the screen. Press <span class="kbd">G</span> to bring it back. If accumulated layers exist, ENGAGE warns before entering WARP because the current superposition may be discarded.</div>
+
+<h2>SPACE · BACKGROUND</h2>
+<ul><li><b>Space background</b> displays the bundled <b>space-background.jpg</b> behind the generated universe.</li><li>The background is decorative and does not participate in geometry or generation logic.</li></ul>
+
+<h2>HELP &amp; SHORTCUTS</h2>
+<div class="box"><b><span class="kbd">Ctrl/Cmd+S</span></b> — export the current configuration.<br><b><span class="kbd">Ctrl/Cmd+Z</span></b> — undo the last generation; in the Primitive Editor, undo the last point.<br><b><span class="kbd">H</span></b> — open this manual.<br><b><span class="kbd">G</span></b> — show/hide the Bridge controls; in WARP, the first press restores the Bridge.</div>
+
+<h2>RESET</h2><p><b>RESET</b> restores the Genesis 0.7 welcome configuration: the refined Genesis G Custom Primitive, Spectrum, Solid stroke, the agreed generation settings and the Space background.</p>
+
+<div class="box"><b>The 0.7 idea</b><br>Genesis 0.7 does not change what Genesis is. It gives the same generative geometry a richer visual language through <b>Strokes &amp; Colors</b>. The default welcome demonstrates that language without requiring any setup.</div>
+<footer>GENESIS 0.7 · STROKES &amp; COLORS · © 2026 MASTRO Inc. · MCO with ASTER</footer>
+</main></body></html>
