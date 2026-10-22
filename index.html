@@ -1,6 +1,6 @@
 <!doctype html>
 <!--
-  GENESIS 0.7 — STROKES & COLORS
+  GENESIS 0.8 — NEW EXPERIENCE
   Original generative-art engine created by MCO with ASTER.
   © 2026 MASTRO Inc. All rights reserved.
 -->
@@ -8,7 +8,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>GENESIS 0.7 — STROKES & COLORS</title>
+<title>GENESIS 0.8 — NEW EXPERIENCE</title>
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000;color:#eee;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
@@ -23,6 +23,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000;color:
 }
 svg {
     position: relative;
+    touch-action: none;
     background: transparent;
     z-index: 1;
     width: 100vw;
@@ -31,7 +32,13 @@ svg {
 }
 #panel{position:fixed;top:18px;left:18px;width:min(360px,calc(100vw - 36px));max-height:calc(100vh - 36px);overflow-y:auto;padding:14px;background:rgba(8,8,8,.90);border:1px solid #333;border-radius:12px;z-index:10;backdrop-filter:blur(10px)}
 #panel.hidden{display:none}
-.brand{display:flex;gap:10px;align-items:center;margin-bottom:12px}
+.brand{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
+#brandActions{margin-left:54px;display:flex;align-items:center;justify-content:flex-end;gap:6px;flex:1 0 calc(100% - 54px);min-width:0}
+#brandActions a,#brandActions button{width:auto;margin:0;padding:6px 8px;border:1px solid #333;border-radius:7px;background:rgba(8,8,8,.72);color:#eee;text-decoration:none;font-size:10px;letter-spacing:.08em;line-height:1;cursor:pointer;white-space:nowrap}
+#brandActions button{font-weight:600}
+#brandActions a{opacity:.62}
+#brandActions a:hover,#brandActions button:hover{opacity:1;border-color:#555}
+#brandActions button .button-icon{width:12px;height:12px;flex-basis:12px}
  .mark{width:44px;height:44px;flex:0 0 auto;border:1px solid #444;border-radius:9px;display:grid;place-items:center;background:rgba(8,8,8,.38);overflow:hidden}
 .genesis-mark{width:31px;height:31px;display:block;flex:0 0 auto;transform:scaleX(1.5);transform-origin:center}
 .genesis-mark polygon{fill:none;stroke:#eee;stroke-linejoin:round}
@@ -60,8 +67,17 @@ button:disabled,input:disabled,select:disabled{opacity:.35}
 #go{border-color:#3b4a56;background:#0d1115}
 #engage{border-color:#465b78;background:#0d1118}
 #engage.running,#go.running{border-color:#9a5a5a;background:#1a0c0c}
-#warpToggle,#spaceToggle{display:flex;align-items:center;gap:8px;margin-top:9px;font-size:13px;opacity:.75}
-#warpToggle input,#spaceToggle input{width:auto}
+#warpToggle{display:flex;align-items:center;gap:8px;margin-top:9px;font-size:13px;opacity:.75}
+#warpToggle input{width:auto}
+#universeTitle{margin-top:12px;font-size:10px;letter-spacing:.12em;opacity:.48}
+#universeChoices{display:flex;align-items:center;gap:12px;margin-top:8px;font-size:12px;opacity:.78;flex-wrap:wrap}
+#universeChoices label{display:flex;align-items:center;gap:5px;margin:0;white-space:nowrap;cursor:pointer;opacity:.78}
+#universeChoices input[type=radio]{width:auto;margin:0}
+#universeColorWrap,#universeImageWrap{display:none;align-items:center;gap:8px;margin-top:8px}
+#universeColorWrap.visible,#universeImageWrap.visible{display:flex}
+#universeColor{width:52px;height:30px;padding:2px}
+#chooseUniverseImage{width:auto;margin:0;padding:6px 10px;font-size:11px;letter-spacing:.08em}
+#universeImageName{font-size:10px;opacity:.45;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .presentation-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .presentation-row label{white-space:nowrap;margin-bottom:0}
 .persistence-title{margin-top:12px;font-size:10px;letter-spacing:.12em;opacity:.42}
@@ -124,6 +140,80 @@ body.warp-mode #bridgeToggle{display:block !important}
   #toggle{top:10px;right:10px;width:42px;height:42px}
 }
 
+
+/* GENESIS 0.8 — NEW EXPERIENCE · USE ME BABY · YOUR UNIVERSE · NATURAL ZOOM · SURPRISE ME */
+#welcomeOverlay{
+  position:fixed;
+  inset:0;
+  z-index:5000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+  background:transparent;
+  opacity:1;
+  transition:opacity 1s ease;
+}
+#welcomeOverlay.hidden{opacity:0;visibility:hidden}
+#welcomeMessage{
+  position:absolute;
+  z-index:2;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  margin:0;
+  padding:18px 24px;
+  text-align:center;
+  font-size:clamp(20px,2.4vw,25px);
+  font-weight:300;
+  letter-spacing:.16em;
+  white-space:nowrap;
+  color:#eee;
+  opacity:0;
+  transition:opacity 1s ease;
+  text-shadow:0 0 22px rgba(255,255,255,.16);
+}
+#welcomeMessage.visible{opacity:.82}
+#welcomeExplore{
+  position:absolute;
+  left:50%;
+  bottom:8.5vh;
+  transform:translateX(-50%);
+  margin:0;
+  padding:16px 22px;
+  border:0;
+  background:rgba(0, 0, 0, 0.3);
+  color:#fff;
+  font:600 clamp(14px,2vw,21px)/1.35 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  letter-spacing:.10em;
+  white-space:nowrap;
+  opacity:0;
+  cursor:pointer;
+  pointer-events:none;
+  transition:opacity 1s ease,transform 1s ease;
+  -webkit-text-stroke:0;
+  text-shadow:none;
+  z-index:2;
+}
+#welcomeExplore.visible{opacity:.82;pointer-events:auto;transform:translateX(-50%) translateY(-2px)}
+#welcomeExplore:hover{opacity:1}
+#welcomeExplore .welcomeArrow{
+  display:inline-block;
+  margin-left:.10em;
+  font-size:1.30em;
+  font-weight:800;
+  line-height:0;
+  vertical-align:-.05em;
+}
+body.welcome-mode #panel,
+body.welcome-mode #toggle{display:none!important}
+body.welcome-mode #welcomeOverlay{pointer-events:none}
+body.welcome-explore #welcomeOverlay{pointer-events:auto}
+@media(max-width:700px){
+  #welcomeMessage{letter-spacing:.10em;padding:16px 18px}
+  #welcomeExplore{bottom:7vh;max-width:92vw;text-align:center;white-space:normal;padding:18px 20px}
+}
+
 </style>
 
 <!--
@@ -136,6 +226,10 @@ body.warp-mode #bridgeToggle{display:block !important}
 </head>
 <body>
 <div id="spaceBackgroundLayer" aria-hidden="true"></div>
+<div id="welcomeOverlay" aria-hidden="true">
+  <div id="welcomeMessage">Starting Génesis…</div>
+  <button id="welcomeExplore" type="button">Explore &amp; Create your own Genesis <span class="welcomeArrow">→</span></button>
+</div>
 <svg id="canvas" viewBox="-500 -500 1000 1000"><g id="universe"></g><g id="warpUniverse" opacity="0"></g></svg>
 <button id="bridgeToggle" aria-label="Show bridge controls">G</button>
 
@@ -150,7 +244,11 @@ body.warp-mode #bridgeToggle{display:block !important}
         <polygon class="g3" points="0,-11.2 6.59,-3.46 4.26,9.06 -4.26,9.06 -6.59,-3.46" transform="rotate(14.4)"/>
       </svg>
     </div>
-    <div><h1>GENESIS 0.7</h1><div class="sub">STROKES &amp; COLORS</div></div>
+    <div><h1>GENESIS 0.8</h1><div class="sub">NEW EXPERIENCE</div></div>
+    <div id="brandActions">
+      <button id="surpriseMe" title="Let GENESIS choose a controlled random configuration."><svg class="button-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4h2.5l5 8H14"/><path d="M4 12h2.5l1.6-2.55"/><path d="M11 4h3"/><path d="M12 2.5L14 4l-2 1.5"/><path d="M12 10.5L14 12l-2 1.5"/></svg>SURPRISE ME</button>
+      <a href="manual.html" target="_blank" rel="noopener" title="Help · H">HELP · H</a>
+    </div>
   </div>
 
   <div class="row"><label>Shape</label>
@@ -199,7 +297,7 @@ body.warp-mode #bridgeToggle{display:block !important}
   </div>
 
   <div class="row"><label>Delay <span id="dv" class="value"></span></label>
-    <select id="delay"><option value="0">0</option><option value="5">5</option><option value="10">10</option><option value="25" selected>25</option><option value="50">50</option><option value="75">75</option><option value="100">100</option><option value="200">200</option><option value="300">300</option></select>
+    <select id="delay"><option value="0">0</option><option value="5">5</option><option value="10">10</option><option value="15">15</option><option value="25" selected>25</option><option value="50">50</option><option value="75">75</option><option value="100">100</option><option value="200">200</option><option value="300">300</option></select>
   </div>
 
   <div class="row"><label>Observer <span id="ov" class="value"></span></label>
@@ -215,7 +313,20 @@ body.warp-mode #bridgeToggle{display:block !important}
   <button id="engage" disabled><svg class="button-icon" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5.5"/><circle cx="8" cy="8" r="1.5"/></svg>ENGAGE</button>
   <div class="presentation-row">
     <label id="warpToggle"><input type="checkbox" id="warpColors" checked> Genesis colors in WARP</label>
-    <label id="spaceToggle"><input type="checkbox" id="spaceBackground"> Space background</label>
+  </div>
+  <div id="universeTitle">YOUR UNIVERSE</div>
+  <div id="universeChoices" role="radiogroup" aria-label="Background">
+    <label><input type="radio" name="universeMode" value="stars" checked> STARS</label>
+    <label><input type="radio" name="universeMode" value="color"> COLOR</label>
+    <label><input type="radio" name="universeMode" value="image"> IMAGE</label>
+  </div>
+  <div id="universeColorWrap">
+    <input id="universeColor" type="color" value="#000000" aria-label="Background color">
+  </div>
+  <div id="universeImageWrap">
+    <button id="chooseUniverseImage" type="button">CHOOSE YOUR IMAGE</button>
+    <span id="universeImageName"></span>
+    <input id="universeImageFile" type="file" accept="image/*" hidden>
   </div>
   <div class="superposition-title">
     <span class="superposition-name"><svg class="superposition-glyph" viewBox="0 0 16 16" aria-hidden="true"><circle cx="6" cy="8" r="4.25"></circle><circle cx="10" cy="8" r="4.25"></circle></svg>SUPERPOSITION</span>
@@ -237,9 +348,8 @@ body.warp-mode #bridgeToggle{display:block !important}
   <button id="reset"><svg class="button-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M13 5.5A5.5 5.5 0 1 0 14 8"/><path d="M13 2.5v3h-3"/></svg>RESET</button>
 
   <div class="hint">
-    GENESIS 0.7 — STROKES & COLORS. Define one or more 2D paths in the canonical normalized space [-1,+1] × [-1,+1] using LINE segments and simple ARC segments. ARC is defined by three clicks: CENTER → START → END. Paths may remain open or be closed. A discreet grid helps placement; select a path to remove it individually. CREATE PRIMITIVE builds a Custom Primitive that persists locally in this browser and can also be included in exported configurations. Rulers and live X/Y coordinates improve placement without changing the canonical geometry model. Existing points have generous precision targets: click a point to connect to it, or drag it to move it. The existing generation, Superposition, persistence, image export and WARP workflow remain intact. Press H for Help.
+    GENESIS 0.8 — NEW EXPERIENCE. USE ME BABY / YOUR UNIVERSE. Define one or more 2D paths in the canonical normalized space [-1,+1] × [-1,+1] using LINE segments and simple ARC segments. ARC is defined by three clicks: CENTER → START → END. Paths may remain open or be closed. A discreet grid helps placement; select a path to remove it individually. CREATE PRIMITIVE builds a Custom Primitive that persists locally in this browser and can also be included in exported configurations. Rulers and live X/Y coordinates improve placement without changing the canonical geometry model. Existing points have generous precision targets: click a point to connect to it, or drag it to move it. The existing generation, Superposition, persistence, image export and WARP workflow remain intact. Press H for Help.
   </div>
-  <div style="margin-top:7px;text-align:right;font-size:10px;opacity:.45"><a href="manual_0.7_STROKES_COLORS.html" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;letter-spacing:.08em">HELP · H</a></div>
   <div class="genesis-signature">MCO · ASTER · © 2026 MASTRO Inc.</div>
 </div>
 
@@ -278,7 +388,13 @@ const q=id=>document.getElementById(id),
       W=q('warpUniverse'),
       bridge=q('bridgeToggle'),
       warpColors=q('warpColors'),
-      spaceBackground=q('spaceBackground'),
+      universeModeInputs=[...document.querySelectorAll('input[name=universeMode]')],
+      universeColor=q('universeColor'),
+      universeColorWrap=q('universeColorWrap'),
+      chooseUniverseImage=q('chooseUniverseImage'),
+      universeImageFile=q('universeImageFile'),
+      universeImageWrap=q('universeImageWrap'),
+      universeImageName=q('universeImageName'),
       spaceLayer=q('spaceBackgroundLayer'),
       C={
         shape:q('shape'),start:q('start'),middle:q('middle'),end:q('end'),colorMode:q('colorMode'),monochromeProgressive:q('monochromeProgressive'),center:q('center'),
@@ -341,13 +457,12 @@ function poly(n){
  * Each path may be open or closed. 0.6.1 deliberately supports only
  * straight line segments; the editor/importer comes later.
  */
-const GENESIS_WELCOME_GENERATION = {"shape":"Custom","points":5,"radialRays":12,"start":"#008bad","middle":"#00aaff","end":"#00ffff","colorMode":"Spectrum","monochromeProgressive":true,"paletteCenter":0.25,"initialScale":100,"scaleFactor":1.015,"rotation":0,"lineWidth":3,"stroke":"Solid","strokeProportional":true,"intensity":100,"mode":"Forward","delay":10,"geometryAngle":108};
-const GENESIS_WELCOME_PRIMITIVE = {"paths":[{"closed":false,"points":[[-0.2621514988440736,0.7401734911244906],[-0.753460128949496,0.25358912385857624]],"segments":[{"type":"LINE","from":[-0.2621514988440736,0.7401734911244906],"to":[-0.753460128949496,0.25358912385857624]}]},{"closed":false,"points":[[0.24332905476790812,0.7307251816984661],[0.41812158975791225,0.5086916402108164]],"segments":[{"type":"LINE","from":[0.24332905476790812,0.7307251816984661],"to":[0.41812158975791225,0.5086916402108164]}]},{"closed":false,"points":[[-0.503081551057277,-0.6723380905747538],[0.8574646261466949,-0.6628897811487295]],"segments":[{"type":"LINE","from":[-0.503081551057277,-0.6723380905747538],"to":[0.8574646261466949,-0.6628897811487295]}]},{"closed":false,"points":[[0.4842591069811115,0.18745160663537708],[0.200811986730284,0.12131387315918696],[0.3047427416575814,-0.12906448848004093],[0.5126038190061941,-0.11961617905401645],[0.5078795561666865,0.0032109784723391988],[0.3519836400287315,-0.001513284367168577]],"segments":[{"type":"LINE","from":[0.4842591069811115,0.18745160663537708],"to":[0.200811986730284,0.12131387315918696]},{"type":"LINE","from":[0.200811986730284,0.12131387315918696],"to":[0.3047427416575814,-0.12906448848004093]},{"type":"LINE","from":[0.3047427416575814,-0.12906448848004093],"to":[0.5126038190061941,-0.11961617905401645]},{"type":"LINE","from":[0.5126038190061941,-0.11961617905401645],"to":[0.5078795561666865,0.0032109784723391988]},{"type":"LINE","from":[0.5078795561666865,0.0032109784723391988],"to":[0.3519836400287315,-0.001513284367168577]}]},{"closed":false,"points":[[-0.6542536368617063,-0.46447679697315003],[-0.5172539070698186,-0.6817864000007785]],"segments":[{"type":"LINE","from":[-0.6542536368617063,-0.46447679697315003],"to":[-0.5172539070698186,-0.6817864000007785]}]},{"closed":false,"points":[[-0.12987646439767542,0.7448975377110075],[-0.2621514988440736,0.7401734911244906]],"segments":[{"type":"LINE","from":[-0.12987646439767542,0.7448975377110075],"to":[-0.2621514988440736,0.7401734911244906]}]},{"closed":false,"points":[[0.11105358781552788,0.7401734911244906],[0.24332905476790812,0.7307251816984661]],"segments":[{"type":"LINE","from":[0.11105358781552788,0.7401734911244906],"to":[0.24332905476790812,0.7307251816984661]}]},{"closed":false,"points":[[-0.4747368390321943,0.30555450132222495],[-0.753460128949496,0.25358912385857624]],"segments":[{"type":"LINE","from":[-0.4747368390321943,0.30555450132222495],"to":[-0.753460128949496,0.25358912385857624]}]},{"closed":false,"points":[[-0.9565971597115921,-0.1668573207097812],[-0.10625558270611857,-0.020409713997850742],[-0.9424245874460597,-0.2991326795356659]],"segments":[{"type":"LINE","from":[-0.9565971597115921,-0.1668573207097812],"to":[-0.10625558270611857,-0.020409713997850742]},{"type":"LINE","from":[-0.10625558270611857,-0.020409713997850742],"to":[-0.9424245874460597,-0.2991326795356659]}]},{"closed":false,"points":[[0.5078795561666865,0.13076218258521155],[0.4842591069811115,0.18745160663537708]],"segments":[{"type":"LINE","from":[0.5078795561666865,0.13076218258521155],"to":[0.4842591069811115,0.18745160663537708]}]},{"closed":false,"points":[[0.38505261489332177,-0.03930608956528503],[0.3519836400287315,-0.001513284367168577]],"segments":[{"type":"LINE","from":[0.38505261489332177,-0.03930608956528503],"to":[0.3519836400287315,-0.001513284367168577]}]},{"closed":false,"points":[[0.9283264062094019,0.7165528256859248],[0.41812158975791225,0.5086916402108164]],"segments":[{"type":"LINE","from":[0.9283264062094019,0.7165528256859248],"to":[0.41812158975791225,0.5086916402108164]}]},{"closed":false,"points":[[0.923602143369894,-0.44558039437409214],[0.8574646261466949,-0.6628897811487295]],"segments":[{"type":"LINE","from":[0.923602143369894,-0.44558039437409214],"to":[0.8574646261466949,-0.6628897811487295]}]},{"closed":false,"points":[[-0.32356518573374704,-0.36999454069324433],[-0.6542536368617063,-0.46447679697315003]],"segments":[{"type":"LINE","from":[-0.32356518573374704,-0.36999454069324433],"to":[-0.6542536368617063,-0.46447679697315003]}]},{"closed":false,"points":[[0.9330502365429276,0.5134157949238287],[0.9283264062094019,0.7165528256859248]],"segments":[{"type":"LINE","from":[0.9330502365429276,0.5134157949238287],"to":[0.9283264062094019,0.7165528256859248]}]}]};
+const GENESIS_WELCOME_GENERATION = {"shape":"Radial","points":5,"radialRays":12,"start":"#008bad","middle":"#00aaff","end":"#00ffff","colorMode":"Spectrum","monochromeProgressive":true,"paletteCenter":0.25,"initialScale":51.9,"scaleFactor":1.02,"rotation":10.5,"lineWidth":2.79,"stroke":"Dashed","strokeProportional":true,"intensity":100,"mode":"Forward","delay":25,"geometryAngle":108};
 
 function applyGenesisWelcomeDefaults(){
+  /* 0.8.1 welcome is intentionally a built-in Primitive, never Custom. */
   setGenerationControls(GENESIS_WELCOME_GENERATION);
-  setCustomPrimitive(GENESIS_WELCOME_PRIMITIVE,false);
-  spaceBackground.checked=true;
+  setUniverseMode('stars');
   warpColors.checked=true;
 }
 
@@ -378,11 +493,11 @@ function removeCustomOption(){
   if(opt)opt.remove();
 }
 
-function setCustomPrimitive(def, persist=true){
+function setCustomPrimitive(def, persist=true, select=true){
   CUSTOM_PRIMITIVE=clonePrimitive(def);
   PRIMITIVE_LIBRARY.Custom=CUSTOM_PRIMITIVE;
   addCustomOption();
-  C.shape.value='Custom';
+  if(select)C.shape.value='Custom';
   if(persist)saveCustomPrimitive();
 }
 
@@ -405,7 +520,7 @@ function loadPersistedCustomPrimitive(){
     if(!raw)return false;
     const def=normalizePrimitive(JSON.parse(raw));
     validatePrimitive(def);
-    setCustomPrimitive(def,false);
+    setCustomPrimitive(def,false,false);
     return true;
   }catch(err){
     try{localStorage.removeItem(CUSTOM_PRIMITIVE_STORAGE_KEY);}catch(ignore){}
@@ -643,9 +758,46 @@ function intensityColor(col){
   return `rgb(${Math.round((rr+mm)*255)},${Math.round((gg+mm)*255)},${Math.round((bb+mm)*255)})`;
 }
 
-function buildStarfield(){
-  spaceLayer.style.display = spaceBackground.checked ? 'block' : 'none';
+let UNIVERSE_IMAGE_URL=null;
+
+function setUniverseMode(mode){
+  universeModeInputs.forEach(r=>r.checked=(r.value===mode));
+  universeColorWrap.classList.toggle('visible',mode==='color');
+  universeImageWrap.classList.toggle('visible',mode==='image');
+  if(mode==='stars'){
+    spaceLayer.style.display='block';
+    spaceLayer.style.backgroundColor='#000';
+    spaceLayer.style.backgroundImage='url("space-background.jpg")';
+  }else if(mode==='color'){
+    spaceLayer.style.display='block';
+    spaceLayer.style.backgroundImage='none';
+    spaceLayer.style.backgroundColor=universeColor.value;
+  }else{
+    spaceLayer.style.display=UNIVERSE_IMAGE_URL?'block':'none';
+    spaceLayer.style.backgroundImage=UNIVERSE_IMAGE_URL?`url("${UNIVERSE_IMAGE_URL}")`:'none';
+    spaceLayer.style.backgroundColor='#000';
+  }
 }
+
+function buildStarfield(){
+  const selected=universeModeInputs.find(r=>r.checked);
+  setUniverseMode(selected?selected.value:'stars');
+}
+
+universeModeInputs.forEach(r=>r.addEventListener('change',()=>setUniverseMode(r.value)));
+universeColor.addEventListener('input',()=>{
+  const selected=universeModeInputs.find(r=>r.checked);
+  if(selected && selected.value==='color')setUniverseMode('color');
+});
+chooseUniverseImage.addEventListener('click',()=>universeImageFile.click());
+universeImageFile.addEventListener('change',()=>{
+  const file=universeImageFile.files && universeImageFile.files[0];
+  if(!file)return;
+  if(UNIVERSE_IMAGE_URL)URL.revokeObjectURL(UNIVERSE_IMAGE_URL);
+  UNIVERSE_IMAGE_URL=URL.createObjectURL(file);
+  universeImageName.textContent=file.name;
+  setUniverseMode('image');
+});
 
 function clear(){U.replaceChildren()}
 function clearWarp(){W.replaceChildren();W.setAttribute('opacity','0')}
@@ -723,13 +875,92 @@ function frames(){
 
 function os(){return Math.pow(10,-(+C.observer.value))}
 
+let ZOOM_FOCUS={x:0,y:0};
+const ZOOM_WHEEL_SENSITIVITY=0.001;
+
+function resetZoomFocus(){
+  ZOOM_FOCUS={x:0,y:0};
+}
+
+function clampObserverValue(v){
+  return Math.max(+C.observer.min,Math.min(+C.observer.max,v));
+}
+
 function applyObserver(){
-  let s=os();
-  U.setAttribute('transform',`scale(${s})`);
+  let s=os(),fx=ZOOM_FOCUS.x,fy=ZOOM_FOCUS.y;
+  U.setAttribute('transform',`translate(${fx} ${fy}) scale(${s}) translate(${-fx} ${-fy})`);
   q('ov').textContent=
     s===1?'ORIGINAL':
     (s>1?s.toFixed(s>=100?0:s>=10?1:2)+'× NEAR':s.toFixed(2)+'× FAR');
 }
+
+function svgPointFromClient(clientX,clientY){
+  const r=S.getBoundingClientRect(),vb=S.viewBox.baseVal;
+  return [
+    vb.x+(clientX-r.left)/r.width*vb.width,
+    vb.y+(clientY-r.top)/r.height*vb.height
+  ];
+}
+
+function naturalZoomAt(clientX,clientY,delta){
+  if(!COMPLETE||ACTIVE||TRAVELLING)return;
+  const p=svgPointFromClient(clientX,clientY);
+  ZOOM_FOCUS={x:p[0],y:p[1]};
+  const next=clampObserverValue(+C.observer.value+delta*ZOOM_WHEEL_SENSITIVITY/Math.LN10);
+  if(next===+C.observer.value)return;
+  C.observer.value=next.toFixed(2);
+  applyObserver();
+}
+
+S.addEventListener('wheel',e=>{
+  if(!COMPLETE||ACTIVE||TRAVELLING)return;
+  e.preventDefault();
+  naturalZoomAt(e.clientX,e.clientY,e.deltaY);
+},{passive:false});
+
+const ZOOM_TOUCHES=new Map();
+let ZOOM_PINCH_START=null;
+
+function pinchState(){
+  if(ZOOM_TOUCHES.size!==2)return null;
+  const pts=[...ZOOM_TOUCHES.values()];
+  const a=pts[0],b=pts[1];
+  return {
+    distance:Math.hypot(b.x-a.x,b.y-a.y),
+    midpoint:{x:(a.x+b.x)/2,y:(a.y+b.y)/2}
+  };
+}
+
+S.addEventListener('pointerdown',e=>{
+  if(e.pointerType!=='touch'||!COMPLETE||ACTIVE||TRAVELLING)return;
+  ZOOM_TOUCHES.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(ZOOM_TOUCHES.size===2){
+    const state=pinchState();
+    ZOOM_PINCH_START={distance:Math.max(1,state.distance),observer:+C.observer.value};
+    const p=svgPointFromClient(state.midpoint.x,state.midpoint.y);
+    ZOOM_FOCUS={x:p[0],y:p[1]};
+  }
+},{passive:true});
+
+S.addEventListener('pointermove',e=>{
+  if(!ZOOM_TOUCHES.has(e.pointerId))return;
+  ZOOM_TOUCHES.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(ZOOM_TOUCHES.size!==2||!ZOOM_PINCH_START||!COMPLETE||ACTIVE||TRAVELLING)return;
+  const state=pinchState();
+  const ratio=Math.max(.05,state.distance/ZOOM_PINCH_START.distance);
+  const next=clampObserverValue(ZOOM_PINCH_START.observer-Math.log10(ratio));
+  const p=svgPointFromClient(state.midpoint.x,state.midpoint.y);
+  ZOOM_FOCUS={x:p[0],y:p[1]};
+  C.observer.value=next.toFixed(2);
+  applyObserver();
+},{passive:true});
+
+function endZoomPointer(e){
+  ZOOM_TOUCHES.delete(e.pointerId);
+  if(ZOOM_TOUCHES.size<2)ZOOM_PINCH_START=null;
+}
+S.addEventListener('pointerup',endZoomPointer,{passive:true});
+S.addEventListener('pointercancel',endZoomPointer,{passive:true});
 
 /* Radius of the primordial geometry in universe coordinates. */
 function extent(g){
@@ -857,6 +1088,7 @@ async function build(id,temporal,accumulate=false){
   COMPLETE=false;
   observerState();
   C.observer.value='0';
+  resetZoomFocus();
   applyObserver();
 
   let F=frames(),nodes=[];
@@ -932,6 +1164,7 @@ function clearUniverse(){
   updateLayerCount();
   clear();
   C.observer.value='0';
+  resetZoomFocus();
   applyObserver();
   setActive(false);
   observerState();
@@ -1750,7 +1983,7 @@ function generationConfigFromControls(){
 function currentConfig(){
   return {
     schemaVersion:CONFIG_SCHEMA_VERSION,
-    genesisVersion:'0.7',
+    genesisVersion:'0.8',
     generation:generationConfigFromControls(),
     customPrimitive:CUSTOM_PRIMITIVE?clonePrimitive(CUSTOM_PRIMITIVE):null,
     superposition:{
@@ -1759,7 +1992,7 @@ function currentConfig(){
     presentation:{
       observer:configNumber('observer'),
       warpColors:!!warpColors.checked,
-      spaceBackground:!!spaceBackground.checked
+      universeMode:(universeModeInputs.find(r=>r.checked)||{}).value||'stars', universeColor:universeColor.value, universeImageName:universeImageName.textContent||''
     }
   };
 }
@@ -1793,32 +2026,35 @@ function normalizeImportedConfig(cfg){
   if(cfg.schemaVersion===1){
     if(!cfg.generation||!cfg.presentation)throw new Error('Missing generation or presentation state.');
     validateGeneration(cfg.generation);
-    if(typeof cfg.presentation.warpColors!=='boolean'||typeof cfg.presentation.spaceBackground!=='boolean')throw new Error('Invalid presentation state.');
+    if(typeof cfg.presentation.warpColors!=='boolean')throw new Error('Invalid presentation state.');
+    if(cfg.presentation.universeMode!==undefined && typeof cfg.presentation.universeMode!=='string')throw new Error('Invalid universe mode.');
     return {
       schemaVersion:3,
       genesisVersion:'0.6',
       generation:cfg.generation,
       customPrimitive:null,
       superposition:{layers:[{generation:cfg.generation}]},
-      presentation:cfg.presentation
+      presentation:{...cfg.presentation, universeMode:cfg.presentation.universeMode || (cfg.presentation.spaceBackground===false?'color':'stars'), universeColor:cfg.presentation.universeColor || '#000000', universeImageName:cfg.presentation.universeImageName || ''}
     };
   }
   if(cfg.schemaVersion===2){
     if(!cfg.genesisVersion||!cfg.superposition||!Array.isArray(cfg.superposition.layers)||!cfg.presentation)throw new Error('Missing configuration state.');
     if(!Number.isFinite(Number(cfg.presentation.observer))||!rangeValid('observer',cfg.presentation.observer))throw new Error('Invalid observer state.');
-    if(typeof cfg.presentation.warpColors!=='boolean'||typeof cfg.presentation.spaceBackground!=='boolean')throw new Error('Invalid presentation state.');
+    if(typeof cfg.presentation.warpColors!=='boolean')throw new Error('Invalid presentation state.');
+    if(cfg.presentation.universeMode!==undefined && typeof cfg.presentation.universeMode!=='string')throw new Error('Invalid universe mode.');
     for(const layer of cfg.superposition.layers){
       if(!layer||typeof layer!=='object')throw new Error('Invalid layer.');
       validateGeneration(layer.generation);
     }
-    return {...cfg,schemaVersion:3,customPrimitive:null};
+    return {...cfg,schemaVersion:3,customPrimitive:null,presentation:{...cfg.presentation,universeMode:cfg.presentation.universeMode || (cfg.presentation.spaceBackground===false?'color':'stars'),universeColor:cfg.presentation.universeColor || '#000000',universeImageName:cfg.presentation.universeImageName || ''}};
   }
   if(cfg.schemaVersion!==CONFIG_SCHEMA_VERSION)throw new Error('Unsupported configuration schema.');
   if(typeof cfg.genesisVersion!=='string')throw new Error('Missing GENESIS version.');
   if(!cfg.superposition||!Array.isArray(cfg.superposition.layers))throw new Error('Missing superposition layers.');
   if(!cfg.presentation)throw new Error('Missing presentation state.');
   if(!Number.isFinite(Number(cfg.presentation.observer))||!rangeValid('observer',cfg.presentation.observer))throw new Error('Invalid observer state.');
-  if(typeof cfg.presentation.warpColors!=='boolean'||typeof cfg.presentation.spaceBackground!=='boolean')throw new Error('Invalid presentation state.');
+  if(typeof cfg.presentation.warpColors!=='boolean')throw new Error('Invalid presentation state.');
+    if(cfg.presentation.universeMode!==undefined && typeof cfg.presentation.universeMode!=='string')throw new Error('Invalid universe mode.');
   let customPrimitive=null;
   if(cfg.customPrimitive){
     customPrimitive=normalizePrimitive(cfg.customPrimitive);
@@ -1876,7 +2112,8 @@ async function restoreConfig(cfg){
   U.setAttribute('opacity','1');
   setBridgeHidden(false);
   warpColors.checked=p.warpColors;
-  spaceBackground.checked=p.spaceBackground;
+  if(typeof p.universeColor==='string')universeColor.value=p.universeColor;
+  setUniverseMode(p.universeMode||'stars');
   C.observer.value=p.observer;
   labels();
   buildStarfield();
@@ -2057,7 +2294,95 @@ C.strokeProportional.onchange=()=>{
   if(C.stroke.value==='Solid')C.strokeProportional.checked=false;
 };
 
+
+/* GENESIS 0.8 — NEW EXPERIENCE · SURPRISE ME
+ * A small, deliberately imperfect recipe library. The goal is not to
+ * guarantee beauty; it is to keep the random space inside Genesis territory.
+ */
+const SURPRISE_HISTORY=[];
+const SURPRISE_FAMILIES=[
+  {name:'spectrum', weight:22, colors:['Spectrum'], strokes:['Dashed','Dotted'], factors:[1.012,1.018,1.024,1.03], initial:[38,72], line:[2,4]},
+  {name:'monochrome', weight:20, colors:['Monochrome'], strokes:['Dashed','Solid'], factors:[1.012,1.018,1.025,1.032], initial:[32,68], line:[2,4]},
+  {name:'three', weight:18, colors:['Three'], strokes:['Dashed','Dotted'], factors:[1.015,1.02,1.027,1.034], initial:[35,75], line:[2,4]},
+  {name:'gradient', weight:15, colors:['Gradient'], strokes:['Dashed','Solid'], factors:[1.012,1.018,1.025,1.032,1.04], initial:[30,70], line:[2,4]},
+  {name:'alternate', weight:8, colors:['Alternate'], strokes:['Dashed','Solid'], factors:[1.01,1.016,1.022,1.03], initial:[30,65], line:[2,4]},
+  {name:'radial', weight:8, colors:['Spectrum','Three','Monochrome'], strokes:['Dashed'], factors:[1.01,1.016,1.022,1.028], initial:[28,60], line:[2,3.5]},
+  {name:'quiet', weight:5, colors:['Monochrome','Gradient'], strokes:['Solid','Dashed'], factors:[1.008,1.012,1.018,1.024], initial:[45,82], line:[2,3.5]},
+  {name:'wild', weight:4, colors:['Spectrum','Three'], strokes:['Dotted','Dashed'], factors:[1.02,1.028,1.036,1.045], initial:[25,55], line:[2.5,4]}
+];
+const SURPRISE_PALETTES=[
+  ['#008bad','#00aaff','#00ffff'],
+  ['#ff2200','#ff8a00','#ffe600'],
+  ['#7b00ff','#ff00aa','#00eaff'],
+  ['#00a83b','#8cff00','#f2ff00'],
+  ['#ffffff','#b9c4cc','#707a83'],
+  ['#111111','#ff4fd8','#ffd000']
+];
+const SURPRISE_SHAPES=['Triangle','Square','Pentagon','Hexagon','Octagon','X','Cross','Star','Radial','Parallel Vertical','Parallel Horizontal'];
+const SURPRISE_ROTATIONS=[0,0,0,0,5,10,15,22.5,30,45];
+function surprisePick(a){ return a[Math.floor(Math.random()*a.length)]; }
+function surpriseRange(a,b,step=1){
+  const n=Math.round((a+Math.random()*(b-a))/step)*step;
+  return +n.toFixed(step<1?3:0);
+}
+function surpriseWeightedFamily(){
+  const available=SURPRISE_FAMILIES.filter(f=>!SURPRISE_HISTORY.includes(f.name));
+  const pool=available.length?available:SURPRISE_FAMILIES;
+  const total=pool.reduce((s,f)=>s+f.weight,0);
+  let r=Math.random()*total;
+  for(const f of pool){ r-=f.weight; if(r<=0)return f; }
+  return pool[pool.length-1];
+}
+function surprisePalette(){ return surprisePick(SURPRISE_PALETTES); }
+function surpriseMe(){
+  abortTravel();
+  setBridgeHidden(false);
+  clearWarp();
+  U.setAttribute('opacity','1');
+  RUN++;
+  COMPLETE=false;
+  LAST_FRAMES=[];
+  GENERATION_HISTORY=[];
+  updateLayerCount();
+
+  // Built-in shapes only: SURPRISE ME should never disturb the user's Custom primitive.
+  C.shape.value=surprisePick(SURPRISE_SHAPES);
+  const family=surpriseWeightedFamily();
+  SURPRISE_HISTORY.push(family.name);
+  while(SURPRISE_HISTORY.length>3)SURPRISE_HISTORY.shift();
+
+  const palette=surprisePalette();
+  C.colorMode.value=surprisePick(family.colors);
+  C.start.value=palette[0];
+  C.middle.value=palette[1];
+  C.end.value=palette[2];
+  C.monochromeProgressive.checked=C.colorMode.value==='Monochrome' && Math.random()<0.6;
+  C.center.value=surpriseRange(.18,.82,.01);
+  C.initial.value=surpriseRange(family.initial[0],family.initial[1],.1);
+  C.factor.value=surprisePick(family.factors);
+  const controlledRotations=[5,10,15,22.5,30,45];
+  const directionalShape=['Line','X','Cross','Parallel Vertical','Parallel Horizontal','Radial'].includes(C.shape.value);
+  C.angle.value=directionalShape
+    ? (Math.random()<0.75?surprisePick(controlledRotations):0)
+    : (Math.random()<0.30?surprisePick(controlledRotations):0);
+  C.line.value=surpriseRange(family.line[0],family.line[1],.1);
+  C.stroke.value=surprisePick(family.strokes);
+  C.strokeProportional.checked=(C.stroke.value==='Dashed'||C.stroke.value==='Dotted') && Math.random()<0.8;
+  C.intensity.value=surpriseRange(85,120,1);
+  C.mode.value='Forward';
+  C.delay.value=surprisePick([10,10,10,15,15]);
+  C.geometryAngle.value=surpriseRange(0,360,1);
+  C.starPoints.value=Math.floor(5+Math.random()*6);
+  C.radialRays.value=Math.floor(6+Math.random()*19);
+
+  labels();
+  q('accumulate').checked=false;
+  q('accumulate').disabled=false;
+  go();
+}
+
 q('generate').onclick=go;
+q('surpriseMe').onclick=surpriseMe;
 q('undoGeneration').onclick=undoGeneration;
 q('clearUniverse').onclick=clearUniverse;
 q('exportConfig').onclick=exportConfig;
@@ -2078,12 +2403,12 @@ q('stop').onclick=()=>{
 };
 C.observer.oninput=()=>{
   if(TRAVELLING&&TRAVEL_MODE==='warp')return;
+  resetZoomFocus();
   applyObserver();
 };
 warpColors.onchange=()=>{
   if(TRAVELLING&&TRAVEL_MODE==='warp')renderWarp(+C.observer.value);
 };
-spaceBackground.addEventListener('change',buildStarfield);
 
 C.mode.onchange=()=>{
   abortTravel();
@@ -2115,13 +2440,58 @@ q('reset').onclick=()=>{
   clearPersistedCustomPrimitive();
   saveCustomPrimitive();
   C.observer.value='0';
-  spaceBackground.checked=true;
+  resetZoomFocus();
+  setUniverseMode('stars');
   warpColors.checked=true;
 
   labels();
   buildStarfield();
   setActive(false);
   go();
+};
+
+const welcomeOverlay=q('welcomeOverlay');
+const welcomeMessage=q('welcomeMessage');
+const welcomeExplore=q('welcomeExplore');
+
+function welcomeSetMode(v){
+  document.body.classList.toggle('welcome-mode',v);
+  document.body.classList.remove('welcome-explore');
+}
+
+async function startWelcomeExperience(){
+  welcomeSetMode(true);
+  welcomeOverlay.classList.remove('hidden');
+  welcomeMessage.classList.remove('visible');
+  welcomeExplore.classList.remove('visible');
+  await new Promise(r=>setTimeout(r,120));
+  welcomeMessage.classList.add('visible');
+  await new Promise(r=>setTimeout(r,1700));
+  welcomeMessage.classList.remove('visible');
+  await new Promise(r=>setTimeout(r,1000));
+
+  /* Genesis now takes over. No controls. No skip.
+     The welcome animation runs at the fastest public cadence: 15 ms. */
+  const welcomeDelay=C.delay.value;
+  C.delay.value='15';
+  try{
+    await go();
+  }finally{
+    C.delay.value=welcomeDelay;
+    labels();
+  }
+
+  await new Promise(r=>setTimeout(r,1000));
+  welcomeExplore.classList.add('visible');
+  document.body.classList.add('welcome-explore');
+}
+
+welcomeExplore.onclick=()=>{
+  welcomeExplore.classList.remove('visible');
+  welcomeOverlay.classList.add('hidden');
+  document.body.classList.remove('welcome-mode','welcome-explore');
+  welcomeOverlay.setAttribute('aria-hidden','true');
+  q('panel').classList.remove('hidden');
 };
 
 q('toggle').onclick=()=>q('panel').classList.toggle('hidden');
@@ -2192,11 +2562,12 @@ C.intensity.onchange=C.intensity.oninput;
 applyGenesisWelcomeDefaults();
 q('accumulate').disabled=(C.mode.value==='Repeat'||C.mode.value==='Breath');
 updateLayerCount();
+setUniverseMode('stars');
 buildStarfield();
-const restoredCustomPrimitive=loadPersistedCustomPrimitive();
-if(!restoredCustomPrimitive)saveCustomPrimitive();
+loadPersistedCustomPrimitive();
+C.shape.value=GENESIS_WELCOME_GENERATION.shape;
 labels();
-go();
+startWelcomeExperience();
 </script>
 </body>
 </html>
