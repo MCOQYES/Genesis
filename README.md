@@ -2,155 +2,98 @@
 
 ### A generative art engine. Bring your shape. Explore infinite possibilities.
 
-[▶ Explore GENESIS](https://mcoqyes.github.io/Genesis/)
+[**▶ Explore GENESIS**](https://mcoqyes.github.io/Genesis/)
 
 ![GENESIS — Bring Your Shape](assets/genesis-preview.jpg)
 
+---
 
-What is GENESIS?
+## What is GENESIS?
 
-GENESIS is an experimental generative art engine that transforms geometry into complex visual compositions through iterative generation.
+GENESIS is a generative art engine that transforms geometry into evolving visual compositions.
 
-It starts with a simple idea: a shape can become much more than itself.
+It starts with a simple idea: take a shape, apply geometric transformations, and let repetition, scale, rotation and color create something unexpected.
 
-Using geometric transformations, repetition, scaling, rotation, color and stroke variations, GENESIS builds intricate structures and visual patterns from simple primitives — or from shapes you bring into the engine yourself.
+With GENESIS, you are not limited to predefined shapes. You can create your own primitives or bring external geometry into the engine.
 
-It is a space for exploration, experimentation, and creative discovery.
+**Bring a shape. Bring a symbol. Bring a pattern.**
 
-Bring Your Shape
+## Bring Your Shape
 
-GENESIS 0.9 introduces the ability to bring external artwork into the generative process.
+GENESIS 0.9 introduces a new way to create: import your own visual material and let GENESIS interpret it.
 
-Import your own:
+Supported formats:
 
-SVG — vector shapes and paths.
+- **SVG** — vector geometry.
+- **PNG** — raster images.
+- **JPG** — raster images.
 
-PNG — raster images.
+Imported artwork is interpreted and converted into a GENESIS Custom Primitive, ready to be used by the generative engine.
 
-JPG — raster images.
+Raster images are first converted into vector geometry before interpretation.
 
-GENESIS interprets the imported geometry and converts it into its own internal representation, allowing your shapes, symbols, and patterns to become the starting point for new generative compositions.
+## Features
 
-Bring a shape. Bring a symbol. Bring a pattern.
+- **Generative Engine** — explore geometry through repetition, scaling and rotation.
+- **Custom Primitives** — create your own shapes using the built-in editor.
+- **Bring Your Shape** — import SVG, PNG and JPG artwork.
+- **Strokes & Colors** — experiment with solid, dashed and dotted strokes, gradients and color variations.
+- **Superposition** — combine generated compositions into richer visual structures.
+- **WARP** — travel through the geometry and explore its depth.
+- **Creative Environment** — work with different backgrounds, natural zoom and controlled randomization through *Surprise Me*.
 
-Features
+## Getting Started
 
-Generative Engine
-
-Iterative geometric generation.
-
-Multiple built-in primitives.
-
-Custom primitives.
-
-Radial and directional generation.
-
-Adjustable scale, rotation, and geometry parameters.
-
-Your Own Shapes
-
-Built-in primitive editor.
-
-Multiple paths and custom geometry.
-
-SVG interpretation.
-
-PNG and JPG raster-to-vector conversion.
-
-Integration with the GENESIS generation engine.
-
-Strokes & Colors
-
-Solid, dashed, and dotted strokes.
-
-Multiple color modes.
-
-Gradient and alternate color variations.
-
-Monochrome and spectrum modes.
-
-Creative Experience
-
-Superposition: combine generated compositions.
-
-WARP: explore an infinite visual journey.
-
-Custom backgrounds: stars, colors, and images.
-
-Natural zoom and interactive exploration.
-
-Surprise Me: discover unexpected combinations.
-
-Getting Started
+1. Open [GENESIS](https://mcoqyes.github.io/Genesis/).
+2. Explore the initial composition.
+3. Open the panel to experiment with the available settings.
+4. Generate, randomize and explore.
+5. Use **BRING YOUR SHAPE** to import your own artwork.
 
 No installation or programming knowledge is required.
 
-Visit GENESIS.
+## Keyboard Shortcuts — GePaRaHe
 
-Let the opening experience introduce the engine.
+GENESIS includes four handy keyboard shortcuts:
 
-Explore the controls and experiment with the available parameters.
+| Key | Action |
+|:---:|---|
+| **G** | Generate using the current settings |
+| **P** | Toggle the control panel |
+| **R** | Randomize — Surprise Me |
+| **H** | Open Help / Manual |
 
-Use BRING YOUR SHAPE to import your own artwork.
+Remember: **Ge-Pa-Ra-He** — Generate, Panel, Randomize, Help.
 
-Generate, combine, and explore.
+## Explore & Create
 
-GENESIS runs directly in your browser.
+GENESIS is an invitation to experiment. Start with a simple primitive, bring your own geometry, or let the engine surprise you.
 
-Keyboard Shortcuts — GePaRaHe
+There is no single intended result. Every generation is an opportunity to discover a different visual possibility.
 
-GENESIS includes four keyboard shortcuts:
+## Roadmap
 
-Key
+GENESIS continues to evolve.
 
-Action
+The next milestone, **1.0**, will focus on refinement and a more comfortable experience across different screen sizes, including mobile devices.
 
-G
+## Credits
 
-Generate
+**Created by MCO with ASTER.**
 
-P
+GENESIS is an independent creative project exploring the intersection of geometry, generative systems and visual expression.
 
-Panel Toggle
+## Contact & Collaboration
 
-R
+Ideas, feedback and collaboration are welcome.
 
-Randomize
+**Email:** [GenesisArt@proton.me](mailto:GenesisArt@proton.me)
 
-H
+## Ownership & License
 
-Help
+Copyright © 2026 MASTRO Inc. All rights reserved.
 
-GePaRaHe — Generate · Panel · Randomize · Help.
+GENESIS is proprietary software. Its source code, original architecture, visual identity, documentation and associated intellectual property are protected by the terms stated in [LICENSE.txt](LICENSE.txt).
 
-Screenshots & Creations
+Third-party components and assets remain subject to their respective licenses and terms.
 
-GENESIS is designed to encourage experimentation. Every primitive, imported shape, and combination of parameters can lead to a different visual result.
-
-Share what you create and explore what others discover.
-
-(More examples and creations will be added here.)
-
-Roadmap
-
-GENESIS is an evolving creative experiment.
-
-Version 0.9 — BRING YOUR SHAPE — expands the engine beyond its built-in geometry, allowing external shapes and artwork to become part of the generative process.
-
-Future development will continue exploring new creative possibilities, usability improvements, and ways to make the experience more accessible.
-
-Credits
-
-Created by MCO with ASTER.
-
-GENESIS is an independent generative art project developed through experimentation, geometry, programming and creative collaboration.
-
-Contact & Collaboration
-
-Ideas, feedback, bug reports, and creative collaborations are welcome.
-
-Email: GenesisArt@proton.me
-
-Live project: https://mcoqyes.github.io/Genesis/
-
-Bring your shape. Discover what it can become.
