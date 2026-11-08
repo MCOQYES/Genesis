@@ -12,7 +12,7 @@
 
 GENESIS is a generative art engine that transforms geometry into evolving visual compositions.
 
-It starts with a simple idea: take a shape, apply geometric transformations, and let repetition, scale, rotation and color create something unexpected.
+It starts with a simple idea: take a shape, apply geometric transformations, and let repetition, scale, rotation, and color create something unexpected.
 
 With GENESIS, you are not limited to predefined shapes. You can create your own primitives or bring external geometry into the engine.
 
@@ -28,7 +28,7 @@ Supported formats:
 - **PNG** — raster images.
 - **JPG** — raster images.
 
-Imported artwork is interpreted and converted into a GENESIS Custom Primitive, ready to be used by the generative engine.
+Imported artwork could be interpreted and converted into a GENESIS Custom Primitive, ready to be used by the generative engine.
 
 Raster images are first converted into vector geometry before interpretation.
 
@@ -69,7 +69,11 @@ Remember: **Ge-Pa-Ra-He** — Generate, Panel, Randomize, Help.
 
 GENESIS is an invitation to experiment. Start with a simple primitive, bring your own geometry, or let the engine surprise you.
 
-There is no single intended result. Every generation is an opportunity to discover a different visual possibility.
+There is no single intended result. Every generation offers a chance to discover a new visual possibility.
+
+## Documentation
+
+For a detailed guide to GENESIS, including its controls, settings and features, visit the **[GENESIS User Manual](manual.html)**.
 
 ## Roadmap
 
@@ -81,11 +85,11 @@ The next milestone, **1.0**, will focus on refinement and a more comfortable exp
 
 **Created by MCO with ASTER.**
 
-GENESIS is an independent creative project exploring the intersection of geometry, generative systems and visual expression.
+GENESIS is an independent creative project exploring the intersection of geometry, generative systems, and visual expression.
 
 ## Contact & Collaboration
 
-Ideas, feedback and collaboration are welcome.
+Ideas, feedback, and collaboration are welcome.
 
 **Email:** [GenesisArt@proton.me](mailto:GenesisArt@proton.me)
 
@@ -93,7 +97,7 @@ Ideas, feedback and collaboration are welcome.
 
 Copyright © 2026 MASTRO Inc. All rights reserved.
 
-GENESIS is proprietary software. Its source code, original architecture, visual identity, documentation and associated intellectual property are protected by the terms stated in [LICENSE.txt](LICENSE.txt).
+GENESIS is proprietary software. Its source code, original architecture, visual identity, documentation, and associated intellectual property are protected by the terms stated in [LICENSE.txt](LICENSE.txt).
 
 Third-party components and assets remain subject to their respective licenses and terms.
 
